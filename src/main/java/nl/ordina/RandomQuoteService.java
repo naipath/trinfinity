@@ -1,4 +1,4 @@
-package com.airhacks;
+package nl.ordina;
 
 import rx.Observable;
 

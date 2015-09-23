@@ -1,4 +1,4 @@
-package com.airhacks;
+package nl.ordina;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.websocket.Session;
