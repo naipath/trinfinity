@@ -9,27 +9,22 @@ import javax.websocket.server.ServerEndpoint;
 public class WebsocketBoundary {
 
     @Inject
-    private Sessions sessions;
-
-    @Inject
     private Game game;
 
     @OnOpen
     public void onOpen(Session session) {
-        game.getCoordinates().subscribe(s -> session.getAsyncRemote().sendText(s));
-        sessions.add(session);
+        game.addUser(session);
     }
 
     @OnMessage
     public void onMessage(Session s, String message) {
         game.addOccupation(message, s.getId());
-        sessions.sendMessageToAll(message);
     }
 
     @OnClose
     public void onClose(Session s) {
-        sessions.remove(s);
         game.clearBord();
+        game.removeUser(s);
     }
 
     @OnError
