@@ -4,32 +4,30 @@ import javax.inject.Inject;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 
-@ServerEndpoint(value = "trinfinty")
+
+@ServerEndpoint(value = "/actions")
 public class WebsocketBoundary {
 
     @Inject
-    RandomQuoteService randomQuoteService;
-
-    @Inject
-    BordLogicService bordLogicService;
+    Sessions sessions;
 
     @OnOpen
     public void onOpen(Session session) {
+        sessions.add(session);
     }
 
     @OnMessage
     public void onMessage(Session session, String message) {
-        bordLogicService.processMove(message)
-                .zipWith(randomQuoteService.getQuote(), (s, s2) -> s + " | " + s2)
-                .subscribe(s1 -> session.getAsyncRemote().sendText(s1));
+        sessions.sendMessageToAll(session, message);
     }
 
     @OnClose
-    public void onClose() {
+    public void onClose(Session s) {
+        sessions.remove(s);
     }
 
     @OnError
-    public void onError(Exception e) {
+    public void onError(Throwable e) {
         e.printStackTrace();
     }
 }

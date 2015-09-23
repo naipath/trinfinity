@@ -1,0 +1,16 @@
+{
+  "name": "trinfinity",
+  "version": "1.0.0",
+  "description": "trinfinity",
+  "main": "index.js",
+  "dependencies": {
+    "jquery": "^2.1.4",
+    "rx": "^3.1.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
