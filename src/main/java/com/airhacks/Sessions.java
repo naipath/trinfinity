@@ -18,7 +18,7 @@ public class Sessions {
         sessions.remove(s);
     }
 
-    public void sendMessageToAll(Session s, String message){
-        sessions.forEach(session1 -> session1.getAsyncRemote().sendText(message + " | " + s.getId()));
+    public void sendMessageToAll(String message){
+        sessions.forEach(session1 -> session1.getAsyncRemote().sendText(message));
     }
 }

@@ -17,8 +17,8 @@ public class WebsocketBoundary {
     }
 
     @OnMessage
-    public void onMessage(Session session, String message) {
-        sessions.sendMessageToAll(session, message);
+    public void onMessage(String message) {
+        sessions.sendMessageToAll(message);
     }
 
     @OnClose
