@@ -17,8 +17,15 @@ public class Game {
 
     public void addCoordinate(String coordinateId, String sessionId) {
         Coordinate coordinate = new Coordinate(coordinateId, users.get(sessionId));
-        board.add(coordinate);
-        sendCoordinateToAllUsers(coordinate);
+
+        if (!isCoordinateAlreadyOccupied(coordinateId)) {
+            board.add(coordinate);
+            sendCoordinateToAllUsers(coordinate);
+        }
+    }
+
+    private boolean isCoordinateAlreadyOccupied(String coordinateId) {
+        return board.stream().anyMatch(coordinate1 -> coordinate1.getCoordinate().equals(coordinateId));
     }
 
     private Observable<Coordinate> getAllCoordinates() {
