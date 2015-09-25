@@ -25,7 +25,7 @@ public class Game {
     }
 
     private boolean isCoordinateAlreadyOccupied(String coordinateId) {
-        return board.stream().anyMatch(coordinate1 -> coordinate1.getCoordinate().equals(coordinateId));
+        return board.stream().anyMatch(coordinate -> coordinate.isSameCoordinate(coordinateId));
     }
 
     private Observable<Coordinate> getAllCoordinates() {

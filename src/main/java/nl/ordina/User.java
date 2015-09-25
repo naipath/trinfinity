@@ -6,20 +6,23 @@ import javax.websocket.Session;
 import java.awt.*;
 import java.security.SecureRandom;
 
-@Getter
 public class User {
 
     public static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
     private Session session;
-    private String hexColor;
+    @Getter private String hexColor;
 
     public User(Session session) {
         this.session = session;
-        this.hexColor = generateHexColor();
+        this.hexColor = generateRandomHexColor();
     }
 
-    private static String generateHexColor() {
+    public String getSessionId() {
+        return session.getId();
+    }
+
+    private static String generateRandomHexColor() {
         return "#" + Integer.toHexString(new Color(SECURE_RANDOM.nextInt()).getRGB()).substring(2);
     }
 
