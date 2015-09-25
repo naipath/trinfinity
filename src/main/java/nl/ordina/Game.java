@@ -15,30 +15,34 @@ public class Game {
     private Set<Coordinate> board = new HashSet<>();
     private Map<String, User> users = new HashMap<>();
 
-    public void addOccupation(String coordinate, String sessionId) {
-        Coordinate coordinate1 = new Coordinate(coordinate, users.get(sessionId));
-        board.add(coordinate1);
-        sendMessageToAllUsers(coordinate1);
+    public void addCoordinate(String coordinateId, String sessionId) {
+        Coordinate coordinate = new Coordinate(coordinateId, users.get(sessionId));
+        board.add(coordinate);
+        sendCoordinateToAllUsers(coordinate);
     }
 
-    private Observable<Coordinate> getCoordinates() {
+    private Observable<Coordinate> getAllCoordinates() {
         return Observable.create(subscriber -> board.forEach(subscriber::onNext));
     }
 
-    public void clearBord() {
-        board.clear();
-    }
-
-    public void addUser(Session s) {
-        users.put(s.getId(), new User(s));
-        getCoordinates().subscribe(coordinate -> users.get(s.getId()).sendCoordinate(coordinate));
+    public void addUser(Session session) {
+        users.put(session.getId(), new User(session));
+        sendAllCoordinatesToUser(users.get(session.getId()));
     }
 
     public void removeUser(Session session) {
         users.remove(session.getId());
     }
 
-    private void sendMessageToAllUsers(Coordinate coordinate) {
+    private void sendCoordinateToAllUsers(Coordinate coordinate) {
         users.forEach((s, user) -> user.sendCoordinate(coordinate));
+    }
+
+    private void sendAllCoordinatesToUser(User user) {
+        getAllCoordinates().subscribe(user::sendCoordinate);
+    }
+
+    public void clearBord() {
+        board.clear();
     }
 }

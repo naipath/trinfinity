@@ -18,7 +18,7 @@ public class WebsocketBoundary {
 
     @OnMessage
     public void onMessage(Session s, String message) {
-        game.addOccupation(message, s.getId());
+        game.addCoordinate(message, s.getId());
     }
 
     @OnClose

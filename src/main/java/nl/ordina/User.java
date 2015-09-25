@@ -10,6 +10,7 @@ import java.security.SecureRandom;
 public class User {
 
     public static final SecureRandom SECURE_RANDOM = new SecureRandom();
+
     private Session session;
     private String hexColor;
 
