@@ -1,5 +1,7 @@
 package nl.ordina;
 
+import nl.ordina.message.CoordinateMessage;
+
 public class Coordinate {
 
     private static final String SEPERATOR = "_";
@@ -44,11 +46,7 @@ public class Coordinate {
         return user.getSessionId();
     }
 
-    public String generateJson() {
-        return String.format("{ \"coordinate\" : \"%s\", \"hexcolor\" : \"%s\", \"user\" : \"%s\"}", getStringCoordinate(), user.hexColor, user.getSessionId());
-    }
-
-    public String generateResetJson() {
-        return String.format("{ \"coordinate\" : \"%s\", \"hexcolor\" : \"#fff\", \"user\" : \"%s\"}", getStringCoordinate(), user.getSessionId());
+    public CoordinateMessage generateMessage() {
+        return new CoordinateMessage(getStringCoordinate(), user.hexColor, user.getSessionId());
     }
 }

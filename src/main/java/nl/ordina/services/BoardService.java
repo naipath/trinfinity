@@ -2,6 +2,7 @@ package nl.ordina.services;
 
 import nl.ordina.Coordinate;
 import nl.ordina.User;
+import nl.ordina.message.GameEndingMessage;
 import rx.Observable;
 
 import java.util.HashSet;
@@ -29,9 +30,9 @@ public class BoardService {
         });
     }
 
-    public void clearBord(Observable<User> users) {
+    public void gameEnding(Observable<User> users) {
         users.subscribe(
-                (User user) -> board.forEach(coordinate -> user.sendJson(coordinate.generateResetJson())),
+                user -> user.sendMessage(new GameEndingMessage()),
                 Throwable::printStackTrace,
                 board::clear
         );
@@ -41,7 +42,7 @@ public class BoardService {
         return board.stream().filter(c -> c.matchesSessionId(sessionId)).collect(Collectors.toList());
     }
 
-    public boolean isWinningConditionMetAndAlsoTheMostUglyMethodEver(Coordinate coordinate) {
+    public boolean isWinningConditionMet(Coordinate coordinate) {
         List<Coordinate> userCoordinates = getCoordinatesFromUser(coordinate.getSessionId());
 
         return userCoordinates.stream()
@@ -58,5 +59,9 @@ public class BoardService {
                     || userCoordinates.stream().anyMatch(c -> c.matches(coordinate.relativeX + xDiff, coordinate.relativeY + yDiff));
         }
         return false;
+    }
+
+    public void resetGame() {
+        board.clear();
     }
 }

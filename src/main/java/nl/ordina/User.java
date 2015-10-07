@@ -1,5 +1,7 @@
 package nl.ordina;
 
+import nl.ordina.message.Message;
+
 import javax.websocket.Session;
 import java.awt.*;
 import java.security.SecureRandom;
@@ -24,15 +26,17 @@ public class User {
         return "#" + Integer.toHexString(new Color(SECURE_RANDOM.nextInt()).getRGB()).substring(2);
     }
 
-    public void sendCoordinate(Coordinate coordinate) {
-        if (session.isOpen()) {
-            session.getAsyncRemote().sendText(coordinate.generateJson());
-        }
-    }
-
-    public void sendJson(String json) {
+    private void sendJson(String json) {
         if (session.isOpen()) {
             session.getAsyncRemote().sendText(json);
         }
+    }
+
+    public void sendMessage(Message message){
+        sendJson(message.generateJson());
+    }
+
+    public void sendCoordinate(Coordinate coordinate) {
+        sendMessage(coordinate.generateMessage());
     }
 }

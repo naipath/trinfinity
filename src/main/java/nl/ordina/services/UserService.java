@@ -2,6 +2,7 @@ package nl.ordina.services;
 
 import nl.ordina.Coordinate;
 import nl.ordina.User;
+import nl.ordina.message.ResetMessage;
 import rx.Observable;
 
 import javax.websocket.Session;
@@ -34,5 +35,9 @@ public class UserService {
             users.values().stream().forEach(subscriber::onNext);
             subscriber.onCompleted();
         });
+    }
+
+    public void sendReset(){
+        this.getAllUsers().subscribe(user -> user.sendMessage(new ResetMessage()));
     }
 }
