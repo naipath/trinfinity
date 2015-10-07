@@ -6,6 +6,10 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
+    <build>
+        <finalName>trinfinity</finalName>
+    </build>
+
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>

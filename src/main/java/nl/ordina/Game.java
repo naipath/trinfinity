@@ -6,6 +6,7 @@ import nl.ordina.services.UserService;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.websocket.Session;
+import java.util.List;
 
 @ApplicationScoped
 public class Game {
@@ -21,8 +22,8 @@ public class Game {
 
             userService.sendCoordinateToAllUsers(coordinate);
 
-            if (boardService.isWinningConditionMetAndAlsoTheMostUglyMethodEver(coordinate)) {
-                boardService.clearBord(userService.getAllUsers());
+            if (boardService.isWinningConditionMet(coordinate)) {
+                boardService.gameEnding(userService.getAllUsers());
             }
         }
     }
@@ -37,7 +38,8 @@ public class Game {
         userService.remove(session);
     }
 
-    public void clearBord() {
-        boardService.clearBord(userService.getAllUsers());
+    public void resetGame() {
+        boardService.resetGame();
+        userService.sendReset();
     }
 }

@@ -23,7 +23,7 @@ public class WebsocketBoundary {
 
     @OnClose
     public void onClose(Session s) {
-        game.clearBord();
+        game.resetGame();
         game.removeUser(s);
     }
 
