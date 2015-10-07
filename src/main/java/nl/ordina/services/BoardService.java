@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class BoardService {
 
-    private Set<Coordinate> board = new HashSet<>();
+    private final Set<Coordinate> board = new HashSet<>();
 
     public void add(Coordinate coordinate) {
         board.add(coordinate);
