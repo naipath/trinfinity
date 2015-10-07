@@ -24,7 +24,8 @@ gameEnding.subscribe(function (data) {
 });
 
 handleCoordinate.subscribe(function (data) {
-    $('#' + data.coordinate).css('background', data.hexcolor);
+    console.log(data);
+    $('#' + data.coordinate).css('background', data.hexColor);
 });
 
 resetGame.subscribe(function (data) {
