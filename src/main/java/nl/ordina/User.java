@@ -1,5 +1,7 @@
 package nl.ordina;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.ordina.message.Message;
 
 import javax.websocket.Session;
@@ -7,6 +9,8 @@ import java.awt.*;
 import java.security.SecureRandom;
 
 public class User {
+    
+    private final ObjectMapper mapper = new ObjectMapper();
 
     public static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
@@ -33,7 +37,11 @@ public class User {
     }
 
     public void sendMessage(Message message){
-        sendJson(message.generateJson());
+        try {
+            sendJson(mapper.writeValueAsString(message));
+        } catch (JsonProcessingException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     public void sendCoordinate(Coordinate coordinate) {

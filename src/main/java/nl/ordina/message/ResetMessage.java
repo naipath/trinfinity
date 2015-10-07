@@ -5,9 +5,4 @@ public class ResetMessage implements Message {
     public String getType() {
         return "reset";
     }
-
-    @Override
-    public String generateJson() {
-        return "{\"type\": \"" + getType() + "\", \"reset\": true }";
-    }
 }

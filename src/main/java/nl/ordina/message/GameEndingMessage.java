@@ -5,9 +5,4 @@ public class GameEndingMessage implements Message {
     public String getType() {
         return "ending";
     }
-
-    @Override
-    public String generateJson() {
-        return "{\"type\": \"" + getType() + "\", \"ending\": \"Iemand heeft gewonnen\"}";
-    }
 }
