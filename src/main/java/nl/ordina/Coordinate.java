@@ -35,6 +35,12 @@ public class Coordinate {
     }
 
 
+    public boolean nextTo(Coordinate coordinate) {
+        return !this.matches(coordinate) &&
+                (coordinate.getRelativeX() >= relativeX - 1 && coordinate.getRelativeX() <= relativeX + 1) &&
+                (coordinate.getRelativeY() >= relativeY - 1 && coordinate.getRelativeY() <= relativeY + 1);
+    }
+
     private String getStringCoordinate() {
         return relativeX + SEPERATOR + relativeY;
     }

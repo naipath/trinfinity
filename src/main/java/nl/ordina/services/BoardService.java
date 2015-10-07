@@ -5,7 +5,9 @@ import nl.ordina.User;
 import rx.Observable;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class BoardService {
 
@@ -35,45 +37,26 @@ public class BoardService {
         );
     }
 
+    private List<Coordinate> getCoordinatesFromUser(String sessionId) {
+        return board.stream().filter(c -> c.matchesSessionId(sessionId)).collect(Collectors.toList());
+    }
+
     public boolean isWinningConditionMetAndAlsoTheMostUglyMethodEver(Coordinate coordinate) {
-        return  // Match Y
-                (board.stream().filter(c -> c.matchesSessionId(coordinate.getSessionId())).anyMatch(coordinate1 -> coordinate1.matches(coordinate.getRelativeX(), coordinate.getRelativeY() - 1))
-                        && board.stream().filter(c -> c.matchesSessionId(coordinate.getSessionId())).anyMatch(coordinate1 -> coordinate1.matches(coordinate.getRelativeX(), coordinate.getRelativeY() - 2)))
+        List<Coordinate> userCoordinates = getCoordinatesFromUser(coordinate.getSessionId());
 
-                        || (board.stream().filter(c -> c.matchesSessionId(coordinate.getSessionId())).anyMatch(coordinate1 -> coordinate1.matches(coordinate.getRelativeX(), coordinate.getRelativeY() - 1))
-                        && board.stream().filter(c -> c.matchesSessionId(coordinate.getSessionId())).anyMatch(coordinate1 -> coordinate1.matches(coordinate.getRelativeX(), coordinate.getRelativeY() + 1)))
+        return userCoordinates.stream()
+                .filter(coordinate::nextTo)
+                .filter(coordinate2 -> hasLineOfThree(coordinate, coordinate2, userCoordinates)).count() > 0;
+    }
 
-                        || (board.stream().filter(c -> c.matchesSessionId(coordinate.getSessionId())).anyMatch(coordinate1 -> coordinate1.matches(coordinate.getRelativeX(), coordinate.getRelativeY() + 1))
-                        && board.stream().filter(c -> c.matchesSessionId(coordinate.getSessionId())).anyMatch(coordinate1 -> coordinate1.matches(coordinate.getRelativeX(), coordinate.getRelativeY() + 2)))
+    private boolean hasLineOfThree(Coordinate coordinate, Coordinate coordinate2, List<Coordinate> userCoordinates) {
+        int xDiff = coordinate.getRelativeX() - coordinate2.getRelativeX();
+        int yDiff = coordinate.getRelativeY() - coordinate2.getRelativeY();
 
-                        //Match X
-                        || (board.stream().filter(c -> c.matchesSessionId(coordinate.getSessionId())).anyMatch(coordinate1 -> coordinate1.matches(coordinate.getRelativeX() - 1, coordinate.getRelativeY()))
-                        && board.stream().filter(c -> c.matchesSessionId(coordinate.getSessionId())).anyMatch(coordinate1 -> coordinate1.matches(coordinate.getRelativeX() - 2, coordinate.getRelativeY())))
-
-                        || (board.stream().filter(c -> c.matchesSessionId(coordinate.getSessionId())).anyMatch(coordinate1 -> coordinate1.matches(coordinate.getRelativeX() - 1, coordinate.getRelativeY()))
-                        && board.stream().filter(c -> c.matchesSessionId(coordinate.getSessionId())).anyMatch(coordinate1 -> coordinate1.matches(coordinate.getRelativeX() + 1, coordinate.getRelativeY())))
-
-                        || (board.stream().filter(c -> c.matchesSessionId(coordinate.getSessionId())).anyMatch(coordinate1 -> coordinate1.matches(coordinate.getRelativeX() + 1, coordinate.getRelativeY()))
-                        && board.stream().filter(c -> c.matchesSessionId(coordinate.getSessionId())).anyMatch(coordinate1 -> coordinate1.matches(coordinate.getRelativeX() + 2, coordinate.getRelativeY())))
-
-                        // Match Diagonal left high to right low
-                        || (board.stream().filter(c -> c.matchesSessionId(coordinate.getSessionId())).anyMatch(coordinate1 -> coordinate1.matches(coordinate.getRelativeX() - 1, coordinate.getRelativeY() - 1))
-                        && board.stream().filter(c -> c.matchesSessionId(coordinate.getSessionId())).anyMatch(coordinate1 -> coordinate1.matches(coordinate.getRelativeX() - 2, coordinate.getRelativeY() - 2)))
-
-                        || (board.stream().filter(c -> c.matchesSessionId(coordinate.getSessionId())).anyMatch(coordinate1 -> coordinate1.matches(coordinate.getRelativeX() - 1, coordinate.getRelativeY() - 1))
-                        && board.stream().filter(c -> c.matchesSessionId(coordinate.getSessionId())).anyMatch(coordinate1 -> coordinate1.matches(coordinate.getRelativeX() + 1, coordinate.getRelativeY() + 1)))
-
-                        || (board.stream().filter(c -> c.matchesSessionId(coordinate.getSessionId())).anyMatch(coordinate1 -> coordinate1.matches(coordinate.getRelativeX() + 1, coordinate.getRelativeY() + 1))
-                        && board.stream().filter(c -> c.matchesSessionId(coordinate.getSessionId())).anyMatch(coordinate1 -> coordinate1.matches(coordinate.getRelativeX() + 2, coordinate.getRelativeY() + 2)))
-
-                        //Match left low to right high
-                        || (board.stream().filter(c -> c.matchesSessionId(coordinate.getSessionId())).anyMatch(coordinate1 -> coordinate1.matches(coordinate.getRelativeX() - 1, coordinate.getRelativeY() + 1))
-                        && board.stream().filter(c -> c.matchesSessionId(coordinate.getSessionId())).anyMatch(coordinate1 -> coordinate1.matches(coordinate.getRelativeX() - 2, coordinate.getRelativeY() + 2)))
-
-                        || (board.stream().filter(c -> c.matchesSessionId(coordinate.getSessionId())).anyMatch(coordinate1 -> coordinate1.matches(coordinate.getRelativeX() - 1, coordinate.getRelativeY() + 1))
-                        && board.stream().filter(c -> c.matchesSessionId(coordinate.getSessionId())).anyMatch(coordinate1 -> coordinate1.matches(coordinate.getRelativeX() + 1, coordinate.getRelativeY() - 1)))
-
-                        || (board.stream().filter(c -> c.matchesSessionId(coordinate.getSessionId())).anyMatch(coordinate1 -> coordinate1.matches(coordinate.getRelativeX() + 1, coordinate.getRelativeY() - 1))
-                        && board.stream().filter(c -> c.matchesSessionId(coordinate.getSessionId())).anyMatch(coordinate1 -> coordinate1.matches(coordinate.getRelativeX() + 2, coordinate.getRelativeY() - 2)));
+        if (xDiff != 0 || yDiff != 0) {
+            return userCoordinates.stream().anyMatch(c -> c.matches(coordinate2.getRelativeX() - xDiff, coordinate2.getRelativeY() - yDiff))
+                    || userCoordinates.stream().anyMatch(c -> c.matches(coordinate.getRelativeX() + xDiff, coordinate.getRelativeY() + yDiff));
+        }
+        return false;
     }
 }
