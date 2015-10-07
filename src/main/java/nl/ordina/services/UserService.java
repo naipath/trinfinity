@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class UserService {
 
-    private Map<String, User> users = new HashMap<>();
+    private final Map<String, User> users = new HashMap<>();
 
 
     public void add(Session session) {

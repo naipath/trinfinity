@@ -1,16 +1,12 @@
 package nl.ordina;
 
-import lombok.Getter;
-
 public class Coordinate {
 
     private static final String SEPERATOR = "_";
 
-    @Getter
-    private int relativeX;
-    @Getter
-    private int relativeY;
-    private User user;
+    public final int relativeX;
+    public final int relativeY;
+    private final User user;
 
     public Coordinate(String coordinate, User user) {
         String[] split = coordinate.split(SEPERATOR);
@@ -21,8 +17,7 @@ public class Coordinate {
     }
 
     public boolean matches(Coordinate coordinate) {
-        return relativeX == coordinate.getRelativeX()
-                && relativeY == coordinate.getRelativeY();
+        return relativeX == coordinate.relativeX && relativeY == coordinate.relativeY;
     }
 
     public boolean matches(int xCoordinate, int yCoordinate) {
@@ -37,8 +32,8 @@ public class Coordinate {
 
     public boolean nextTo(Coordinate coordinate) {
         return !this.matches(coordinate) &&
-                (coordinate.getRelativeX() >= relativeX - 1 && coordinate.getRelativeX() <= relativeX + 1) &&
-                (coordinate.getRelativeY() >= relativeY - 1 && coordinate.getRelativeY() <= relativeY + 1);
+                (coordinate.relativeX >= relativeX - 1 && coordinate.relativeX <= relativeX + 1) &&
+                (coordinate.relativeY >= relativeY - 1 && coordinate.relativeY <= relativeY + 1);
     }
 
     private String getStringCoordinate() {
@@ -50,7 +45,7 @@ public class Coordinate {
     }
 
     public String generateJson() {
-        return String.format("{ \"coordinate\" : \"%s\", \"hexcolor\" : \"%s\", \"user\" : \"%s\"}", getStringCoordinate(), user.getHexColor(), user.getSessionId());
+        return String.format("{ \"coordinate\" : \"%s\", \"hexcolor\" : \"%s\", \"user\" : \"%s\"}", getStringCoordinate(), user.hexColor, user.getSessionId());
     }
 
     public String generateResetJson() {

@@ -50,12 +50,12 @@ public class BoardService {
     }
 
     private boolean hasLineOfThree(Coordinate coordinate, Coordinate coordinate2, List<Coordinate> userCoordinates) {
-        int xDiff = coordinate.getRelativeX() - coordinate2.getRelativeX();
-        int yDiff = coordinate.getRelativeY() - coordinate2.getRelativeY();
+        int xDiff = coordinate.relativeX - coordinate2.relativeX;
+        int yDiff = coordinate.relativeY - coordinate2.relativeY;
 
         if (xDiff != 0 || yDiff != 0) {
-            return userCoordinates.stream().anyMatch(c -> c.matches(coordinate2.getRelativeX() - xDiff, coordinate2.getRelativeY() - yDiff))
-                    || userCoordinates.stream().anyMatch(c -> c.matches(coordinate.getRelativeX() + xDiff, coordinate.getRelativeY() + yDiff));
+            return userCoordinates.stream().anyMatch(c -> c.matches(coordinate2.relativeX - xDiff, coordinate2.relativeY - yDiff))
+                    || userCoordinates.stream().anyMatch(c -> c.matches(coordinate.relativeX + xDiff, coordinate.relativeY + yDiff));
         }
         return false;
     }

@@ -1,8 +1,5 @@
 package nl.ordina;
 
-import lombok.Getter;
-import lombok.val;
-
 import javax.websocket.Session;
 import java.awt.*;
 import java.security.SecureRandom;
@@ -11,8 +8,8 @@ public class User {
 
     public static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
-    private Session session;
-    @Getter private String hexColor;
+    private final Session session;
+    public final String hexColor;
 
     public User(Session session) {
         this.session = session;
