@@ -1,6 +1,7 @@
 package nl.ordina;
 
 import lombok.Getter;
+import lombok.val;
 
 import javax.websocket.Session;
 import java.awt.*;
@@ -27,6 +28,14 @@ public class User {
     }
 
     public void sendCoordinate(Coordinate coordinate) {
-        session.getAsyncRemote().sendText(coordinate.generateJson());
+        if (session.isOpen()) {
+            session.getAsyncRemote().sendText(coordinate.generateJson());
+        }
+    }
+
+    public void sendJson(String json) {
+        if (session.isOpen()) {
+            session.getAsyncRemote().sendText(json);
+        }
     }
 }

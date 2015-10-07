@@ -1,55 +1,43 @@
 package nl.ordina;
 
-import rx.Observable;
+import nl.ordina.services.BoardService;
+import nl.ordina.services.UserService;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.websocket.Session;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 @ApplicationScoped
 public class Game {
 
-    private Set<Coordinate> board = new HashSet<>();
-    private Map<String, User> users = new HashMap<>();
+    @Inject private BoardService boardService;
+    @Inject private UserService userService;
 
     public void addCoordinate(String coordinateId, String sessionId) {
-        Coordinate coordinate = new Coordinate(coordinateId, users.get(sessionId));
+        Coordinate coordinate = new Coordinate(coordinateId, userService.get(sessionId));
 
-        if (!isCoordinateAlreadyOccupied(coordinateId)) {
-            board.add(coordinate);
-            sendCoordinateToAllUsers(coordinate);
+        if (!boardService.isOccupied(coordinate)) {
+            boardService.add(coordinate);
+
+            userService.sendCoordinateToAllUsers(coordinate);
+
+            if (boardService.isWinningConditionMetAndAlsoTheMostUglyMethodEver(coordinate)) {
+                boardService.clearBord(userService.getAllUsers());
+            }
         }
     }
 
-    private boolean isCoordinateAlreadyOccupied(String coordinateId) {
-        return board.stream().anyMatch(coordinate -> coordinate.isSameCoordinate(coordinateId));
-    }
-
-    private Observable<Coordinate> getAllCoordinates() {
-        return Observable.create(subscriber -> board.forEach(subscriber::onNext));
-    }
-
     public void addUser(Session session) {
-        users.put(session.getId(), new User(session));
-        sendAllCoordinatesToUser(users.get(session.getId()));
+        userService.add(session);
+        User user = userService.get(session.getId());
+        boardService.getAllCoordinates().subscribe(user::sendCoordinate);
     }
 
     public void removeUser(Session session) {
-        users.remove(session.getId());
-    }
-
-    private void sendCoordinateToAllUsers(Coordinate coordinate) {
-        users.forEach((s, user) -> user.sendCoordinate(coordinate));
-    }
-
-    private void sendAllCoordinatesToUser(User user) {
-        getAllCoordinates().subscribe(user::sendCoordinate);
+        userService.remove(session);
     }
 
     public void clearBord() {
-        board.clear();
+        boardService.clearBord(userService.getAllUsers());
     }
 }
