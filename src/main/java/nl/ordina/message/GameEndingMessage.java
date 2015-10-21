@@ -1,8 +1,10 @@
 package nl.ordina.message;
 
-public class GameEndingMessage implements Message {
-    @Override
-    public String getType() {
-        return "ending";
+import static nl.ordina.message.MessageType.ENDING;
+
+public class GameEndingMessage extends Message {
+
+    public GameEndingMessage() {
+        setType(ENDING);
     }
 }

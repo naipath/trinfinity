@@ -1,12 +1,13 @@
 package nl.ordina;
 
+import nl.ordina.message.CoordinateMessage;
+import nl.ordina.message.SignupMessage;
 import nl.ordina.services.BoardService;
 import nl.ordina.services.UserService;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.websocket.Session;
-import java.util.List;
 
 @ApplicationScoped
 public class Game {
@@ -14,8 +15,13 @@ public class Game {
     @Inject private BoardService boardService;
     @Inject private UserService userService;
 
-    public void addCoordinate(String coordinateId, String sessionId) {
-        Coordinate coordinate = new Coordinate(coordinateId, userService.get(sessionId));
+    public void addCoordinate(CoordinateMessage message, String sessionId) {
+        User user = userService.get(sessionId);
+        if (!user.hasSignedup()) {
+            return;
+        }
+
+        Coordinate coordinate = new Coordinate(message.getCoordinate(), user);
 
         if (!boardService.isOccupied(coordinate)) {
             boardService.add(coordinate);
@@ -41,5 +47,9 @@ public class Game {
     public void resetGame() {
         boardService.resetGame();
         userService.sendReset();
+    }
+
+    public void signup(Session s, SignupMessage signupMessage) {
+        userService.get(s.getId()).signupUser(signupMessage.getUsername());
     }
 }

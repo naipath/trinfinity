@@ -16,6 +16,7 @@ public class User {
 
     private final Session session;
     public final String hexColor;
+    private String username;
 
     public User(Session session) {
         this.session = session;
@@ -46,5 +47,17 @@ public class User {
 
     public void sendCoordinate(Coordinate coordinate) {
         sendMessage(coordinate.generateMessage());
+    }
+
+    public void signupUser(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public boolean hasSignedup() {
+        return username != null;
     }
 }

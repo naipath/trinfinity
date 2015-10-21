@@ -7,15 +7,15 @@ var someObservable = Rx.Observable.fromEvent(ws, 'message')
     });
 
 var handleCoordinate = someObservable.filter(function (data) {
-    return data.type === 'coordinate';
+    return data.type === 'COORDINATE';
 });
 
 var gameEnding = someObservable.filter(function (data) {
-    return data.type === 'ending';
+    return data.type === 'ENDING';
 });
 
 var resetGame = someObservable.filter(function (data) {
-    return data.type === 'reset';
+    return data.type === 'RESET';
 });
 
 gameEnding.subscribe(function (data) {
