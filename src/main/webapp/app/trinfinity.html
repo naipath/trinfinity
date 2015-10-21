@@ -10,46 +10,59 @@
     table {
         margin: 0 auto;
     }
-    
+
     td {
         height: 100px;
         width: 100px;
         border: 1px solid black;
         text-align: center;
     }
+
+    div, #signup {
+        position: absolute;
+        left: 50%;
+        top: 50px;
+
+        background: #FFF;
+        border: 1px solid black;
+        height: 100px;
+        width: 200px;
+        padding: 5px;
+        margin-left: -100px;
+    }
 </style>
 
 <body>
 
-    <div id="signup" style="border: 1px solid black; height: 100px; width: 200px; position: relative;padding: 5px; margin: 0 auto; margin-bottom: 10px;">
-        <label for="username">Username: </label><input type="text" id="username">
-        <button>Play!</button>
-    </div>
+<div id="signup">
+    <label for="username">Username: </label><input type="text" id="username">
+    <button>Play!</button>
+</div>
 
-    <table>
-        <tbody>
-            <tr>
-                <td id="-1_-1"></td>
-                <td id="0_-1"></td>
-                <td id="1_-1"></td>
-            </tr>
-            <tr>
-                <td id="-1_0"></td>
-                <td id="0_0"></td>
-                <td id="1_0"></td>
-            </tr>
-            <tr>
-                <td id="-1_1"></td>
-                <td id="0_1"></td>
-                <td id="1_1"></td>
-            </tr>
-        </tbody>
-    </table>
+<table>
+    <tbody>
+    <tr>
+        <td id="-1_-1"></td>
+        <td id="0_-1"></td>
+        <td id="1_-1"></td>
+    </tr>
+    <tr>
+        <td id="-1_0"></td>
+        <td id="0_0"></td>
+        <td id="1_0"></td>
+    </tr>
+    <tr>
+        <td id="-1_1"></td>
+        <td id="0_1"></td>
+        <td id="1_1"></td>
+    </tr>
+    </tbody>
+</table>
 
-    <script src="node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="node_modules/rx/dist/rx.all.js"></script>
-    <script src="js/trinfinity.js"></script>
-    <script src="js/websocketconnection.js"></script>
+<script src="node_modules/jquery/dist/jquery.min.js"></script>
+<script src="node_modules/rx/dist/rx.all.js"></script>
+<script src="js/trinfinity.js"></script>
+<script src="js/websocketconnection.js"></script>
 </body>
 
 </html>
