@@ -14,6 +14,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 })
 public abstract class Message {
 
+    private String sessionId;
+
     private MessageType type;
 
     public MessageType getType() {
@@ -22,5 +24,13 @@ public abstract class Message {
 
     public void setType(MessageType type) {
         this.type = type;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 }

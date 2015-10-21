@@ -1,10 +1,17 @@
 package nl.ordina;
 
 import nl.ordina.message.CoordinateMessage;
+import nl.ordina.message.Message;
+import nl.ordina.message.MessageType;
 import nl.ordina.message.SignupMessage;
 import nl.ordina.services.BoardService;
 import nl.ordina.services.UserService;
+import rx.Observable;
+import rx.subjects.PublishSubject;
+import rx.subjects.SerializedSubject;
+import rx.subjects.Subject;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.websocket.Session;
@@ -12,25 +19,40 @@ import javax.websocket.Session;
 @ApplicationScoped
 public class Game {
 
-    @Inject private BoardService boardService;
-    @Inject private UserService userService;
+    @Inject
+    private BoardService boardService;
+    @Inject
+    private UserService userService;
 
-    public void addCoordinate(CoordinateMessage message, String sessionId) {
-        User user = userService.get(sessionId);
-        if (!user.hasSignedup()) {
-            return;
-        }
+    private final Subject<Message, Message> messages = new SerializedSubject<>(PublishSubject.create());
 
-        Coordinate coordinate = new Coordinate(message.getCoordinate(), user);
+    @PostConstruct
+    public void setup() {
+        Observable<CoordinateMessage> coordinateStream = messages
+                .filter(message -> MessageType.COORDINATE == message.getType())
+                .map(message -> (CoordinateMessage) message);
 
-        if (!boardService.isOccupied(coordinate)) {
-            boardService.add(coordinate);
+        Observable<SignupMessage> signupStream = messages
+                .filter(message -> MessageType.SIGNUP == message.getType())
+                .map(message -> (SignupMessage) message);
 
-            userService.sendCoordinateToAllUsers(coordinate);
+        coordinateStream
+                .filter(cm -> userService.get(cm.getSessionId()).hasSignedup())
+                .map(cm -> new Coordinate(cm.getCoordinate(), userService.get(cm.getSessionId())))
+                .filter(boardService::isNotOccupied)
+                .subscribe(this::addCoordinate);
 
-            if (boardService.isWinningConditionMet(coordinate)) {
-                boardService.gameEnding(userService.getAllUsers(), user.getUsername());
-            }
+        signupStream.subscribe((signupMessage) ->
+                userService.get(signupMessage.getSessionId()).signupUser(signupMessage.getUsername()));
+    }
+
+    public void addCoordinate(Coordinate coordinate) {
+        boardService.add(coordinate);
+
+        userService.sendCoordinateToAllUsers(coordinate);
+
+        if (boardService.isWinningConditionMet(coordinate)) {
+            boardService.gameEnding(userService.getAllUsers(), userService.get(coordinate.getSessionId()).getUsername());
         }
     }
 
@@ -49,7 +71,7 @@ public class Game {
         userService.sendReset();
     }
 
-    public void signup(Session s, SignupMessage signupMessage) {
-        userService.get(s.getId()).signupUser(signupMessage.getUsername());
+    public Subject<Message, Message> getMessages() {
+        return messages;
     }
 }

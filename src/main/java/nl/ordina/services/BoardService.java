@@ -18,8 +18,8 @@ public class BoardService {
         board.add(coordinate);
     }
 
-    public boolean isOccupied(Coordinate coordinate) {
-        return board.stream().anyMatch(c -> c.matches(coordinate));
+    public boolean isNotOccupied(Coordinate coordinate) {
+        return !board.stream().anyMatch(c -> c.matches(coordinate));
     }
 
 
