@@ -12,10 +12,14 @@ Rx.Observable.fromEvent($('table'), 'click')
 
 Rx.Observable.fromEvent($('button'), 'click')
     .subscribeOnNext(function (event) {
+        userName = $('#username').val();
         var message = {
             type: 'SIGNUP',
-            username: $('#username').val()
+            username: userName
         };
         ws.send(JSON.stringify(message));
         $('#signup').remove();
     });
+
+
+var userName;

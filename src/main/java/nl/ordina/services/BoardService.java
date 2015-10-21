@@ -30,9 +30,9 @@ public class BoardService {
         });
     }
 
-    public void gameEnding(Observable<User> users) {
+    public void gameEnding(Observable<User> users, String username) {
         users.subscribe(
-                user -> user.sendMessage(new GameEndingMessage()),
+                user -> user.sendMessage(new GameEndingMessage(username)),
                 Throwable::printStackTrace,
                 board::clear
         );

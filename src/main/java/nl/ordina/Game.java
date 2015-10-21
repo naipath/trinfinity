@@ -29,7 +29,7 @@ public class Game {
             userService.sendCoordinateToAllUsers(coordinate);
 
             if (boardService.isWinningConditionMet(coordinate)) {
-                boardService.gameEnding(userService.getAllUsers());
+                boardService.gameEnding(userService.getAllUsers(), user.getUsername());
             }
         }
     }
