@@ -1,6 +1,6 @@
 package nl.ordina.services;
 
-import nl.ordina.Coordinate;
+import nl.ordina.Field;
 import nl.ordina.User;
 import nl.ordina.message.ResetMessage;
 import rx.Observable;
@@ -26,8 +26,8 @@ public class UserService {
         users.remove(session.getId());
     }
 
-    public void sendCoordinateToAllUsers(Coordinate coordinate) {
-        this.getAllUsers().subscribe(user -> user.sendCoordinate(coordinate));
+    public void sendCoordinateToAllUsers(Field field) {
+        this.getAllUsers().subscribe(user -> user.sendCoordinate(field));
     }
 
     public Observable<User> getAllUsers() {

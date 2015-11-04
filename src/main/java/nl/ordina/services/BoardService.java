@@ -1,6 +1,6 @@
 package nl.ordina.services;
 
-import nl.ordina.Coordinate;
+import nl.ordina.Field;
 import nl.ordina.User;
 import nl.ordina.message.GameEndingMessage;
 import rx.Observable;
@@ -12,18 +12,18 @@ import java.util.stream.Collectors;
 
 public class BoardService {
 
-    private final Set<Coordinate> board = new HashSet<>();
+    private final Set<Field> board = new HashSet<>();
 
-    public void add(Coordinate coordinate) {
-        board.add(coordinate);
+    public void add(Field field) {
+        board.add(field);
     }
 
-    public boolean isNotOccupied(Coordinate coordinate) {
-        return !board.stream().anyMatch(c -> c.matches(coordinate));
+    public boolean isNotOccupied(Field field) {
+        return !board.stream().anyMatch(c -> c.matches(field));
     }
 
 
-    public Observable<Coordinate> getAllCoordinates() {
+    public Observable<Field> getAllCoordinates() {
         return Observable.create(subscriber -> {
             board.forEach(subscriber::onNext);
             subscriber.onCompleted();
@@ -38,25 +38,25 @@ public class BoardService {
         );
     }
 
-    private List<Coordinate> getCoordinatesFromUser(String sessionId) {
+    private List<Field> getCoordinatesFromUser(String sessionId) {
         return board.stream().filter(c -> c.matchesSessionId(sessionId)).collect(Collectors.toList());
     }
 
-    public boolean isWinningConditionMet(Coordinate coordinate) {
-        List<Coordinate> userCoordinates = getCoordinatesFromUser(coordinate.getSessionId());
+    public boolean isWinningConditionMet(Field field) {
+        List<Field> userFields = getCoordinatesFromUser(field.getSessionId());
 
-        return userCoordinates.stream()
-                .filter(coordinate::nextTo)
-                .filter(coordinate2 -> hasLineOfThree(coordinate, coordinate2, userCoordinates)).count() > 0;
+        return userFields.stream()
+                .filter(field::nextTo)
+                .filter(coordinate2 -> hasLineOfThree(field, coordinate2, userFields)).count() > 0;
     }
 
-    private boolean hasLineOfThree(Coordinate coordinate, Coordinate coordinate2, List<Coordinate> userCoordinates) {
-        int xDiff = coordinate.relativeX - coordinate2.relativeX;
-        int yDiff = coordinate.relativeY - coordinate2.relativeY;
+    private boolean hasLineOfThree(Field field, Field field2, List<Field> userFields) {
+        int xDiff = field.relativeX - field2.relativeX;
+        int yDiff = field.relativeY - field2.relativeY;
 
         if (xDiff != 0 || yDiff != 0) {
-            return userCoordinates.stream().anyMatch(c -> c.matches(coordinate2.relativeX - xDiff, coordinate2.relativeY - yDiff))
-                    || userCoordinates.stream().anyMatch(c -> c.matches(coordinate.relativeX + xDiff, coordinate.relativeY + yDiff));
+            return userFields.stream().anyMatch(c -> c.matches(field2.relativeX - xDiff, field2.relativeY - yDiff))
+                    || userFields.stream().anyMatch(c -> c.matches(field.relativeX + xDiff, field.relativeY + yDiff));
         }
         return false;
     }

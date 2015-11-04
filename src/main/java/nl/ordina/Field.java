@@ -2,7 +2,7 @@ package nl.ordina;
 
 import nl.ordina.message.CoordinateMessage;
 
-public class Coordinate {
+public class Field {
 
     private static final String SEPERATOR = "_";
 
@@ -10,7 +10,7 @@ public class Coordinate {
     public final int relativeY;
     private final User user;
 
-    public Coordinate(String coordinate, User user) {
+    public Field(String coordinate, User user) {
         String[] split = coordinate.split(SEPERATOR);
         relativeX = Integer.parseInt(split[0]);
         relativeY = Integer.parseInt(split[1]);
@@ -18,8 +18,8 @@ public class Coordinate {
         this.user = user;
     }
 
-    public boolean matches(Coordinate coordinate) {
-        return relativeX == coordinate.relativeX && relativeY == coordinate.relativeY;
+    public boolean matches(Field field) {
+        return relativeX == field.relativeX && relativeY == field.relativeY;
     }
 
     public boolean matches(int xCoordinate, int yCoordinate) {
@@ -32,10 +32,10 @@ public class Coordinate {
     }
 
 
-    public boolean nextTo(Coordinate coordinate) {
-        return !this.matches(coordinate) &&
-                (coordinate.relativeX >= relativeX - 1 && coordinate.relativeX <= relativeX + 1) &&
-                (coordinate.relativeY >= relativeY - 1 && coordinate.relativeY <= relativeY + 1);
+    public boolean nextTo(Field field) {
+        return !this.matches(field) &&
+                (field.relativeX >= relativeX - 1 && field.relativeX <= relativeX + 1) &&
+                (field.relativeY >= relativeY - 1 && field.relativeY <= relativeY + 1);
     }
 
     private String getStringCoordinate() {

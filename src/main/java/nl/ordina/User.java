@@ -45,8 +45,8 @@ public class User {
         }
     }
 
-    public void sendCoordinate(Coordinate coordinate) {
-        sendMessage(coordinate.generateMessage());
+    public void sendCoordinate(Field field) {
+        sendMessage(field.generateMessage());
     }
 
     public void signupUser(String username) {

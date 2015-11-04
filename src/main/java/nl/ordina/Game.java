@@ -2,7 +2,6 @@ package nl.ordina;
 
 import nl.ordina.message.CoordinateMessage;
 import nl.ordina.message.Message;
-import nl.ordina.message.MessageType;
 import nl.ordina.message.SignupMessage;
 import nl.ordina.services.BoardService;
 import nl.ordina.services.UserService;
@@ -26,7 +25,7 @@ public class Game {
 
     private final Subject<Message, Message> messages = new SerializedSubject<>(PublishSubject.create());
 
-    private  Observable<Coordinate> coordinateStream ;
+    private  Observable<Field> coordinateStream ;
 
     @PostConstruct
     public void setup() {
@@ -37,7 +36,7 @@ public class Game {
 
         coordinateStream = coordinateMessageStream
                 .filter(cm -> userService.get(cm.getSessionId()).hasSignedup())
-                .map(cm -> new Coordinate(cm.getCoordinate(), userService.get(cm.getSessionId())))
+                .map(cm -> new Field(cm.getCoordinate(), userService.get(cm.getSessionId())))
                 .filter(boardService::isNotOccupied);
                 //.subscribe(this::addCoordinate);
 
@@ -47,13 +46,13 @@ public class Game {
                 userService.get(signupMessage.getSessionId()).signupUser(signupMessage.getUsername()));
     }
 
-    public void addCoordinate(Coordinate coordinate) {
-        boardService.add(coordinate);
+    public void addCoordinate(Field field) {
+        boardService.add(field);
 
-        userService.sendCoordinateToAllUsers(coordinate);
+        userService.sendCoordinateToAllUsers(field);
 
-        if (boardService.isWinningConditionMet(coordinate)) {
-            boardService.gameEnding(userService.getAllUsers(), userService.get(coordinate.getSessionId()).getUsername());
+        if (boardService.isWinningConditionMet(field)) {
+            boardService.gameEnding(userService.getAllUsers(), userService.get(field.getSessionId()).getUsername());
         }
     }
 
