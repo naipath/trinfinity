@@ -33,7 +33,7 @@ public class Field {
     }
 
     public boolean nextTo(Field field) {
-        return !this.matches(field) && (field.relativeX >= relativeX - 1 && field.relativeX <= relativeX + 1)
+        return !this.equals(field) && (field.relativeX >= relativeX - 1 && field.relativeX <= relativeX + 1)
           && (field.relativeY >= relativeY - 1 && field.relativeY <= relativeY + 1);
     }
 

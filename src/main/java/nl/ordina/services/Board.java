@@ -1,14 +1,13 @@
 package nl.ordina.services;
 
-import nl.ordina.Field;
-import nl.ordina.User;
-import nl.ordina.message.GameEndingMessage;
-import rx.Observable;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import nl.ordina.Field;
+import nl.ordina.User;
+import nl.ordina.message.GameEndingMessage;
+import rx.Observable;
 
 public class Board {
 
@@ -19,9 +18,8 @@ public class Board {
     }
 
     public boolean isNotOccupied(Field field) {
-        return !board.stream().anyMatch(c -> c.matches(field));
+        return !board.stream().anyMatch(c -> c.equals(field));
     }
-
 
     public Observable<Field> getAllCoordinates() {
         return Observable.create(subscriber -> {
@@ -32,9 +30,9 @@ public class Board {
 
     public void gameEnding(Observable<User> users, String username) {
         users.subscribe(
-                user -> user.sendMessage(new GameEndingMessage(username)),
-                Throwable::printStackTrace,
-                board::clear
+          user -> user.sendMessage(new GameEndingMessage(username)),
+          Throwable::printStackTrace,
+          board::clear
         );
     }
 
@@ -46,8 +44,8 @@ public class Board {
         List<Field> userFields = getCoordinatesFromUser(field.getSessionId());
 
         return userFields.stream()
-                .filter(field::nextTo)
-                .filter(coordinate2 -> hasLineOfThree(field, coordinate2, userFields)).count() > 0;
+          .filter(field::nextTo)
+          .filter(coordinate2 -> hasLineOfThree(field, coordinate2, userFields)).count() > 0;
     }
 
     private boolean hasLineOfThree(Field field, Field field2, List<Field> userFields) {
@@ -56,7 +54,7 @@ public class Board {
 
         if (xDiff != 0 || yDiff != 0) {
             return userFields.stream().anyMatch(c -> c.matches(field2.relativeX - xDiff, field2.relativeY - yDiff))
-                    || userFields.stream().anyMatch(c -> c.matches(field.relativeX + xDiff, field.relativeY + yDiff));
+              || userFields.stream().anyMatch(c -> c.matches(field.relativeX + xDiff, field.relativeY + yDiff));
         }
         return false;
     }
