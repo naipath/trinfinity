@@ -18,7 +18,8 @@ Rx.Observable.fromEvent($('button'), 'click')
             username: userName
         };
         ws.send(JSON.stringify(message));
-        $('#signup').remove();
+        $('.panel').remove();
+        $('#overlay').remove();
     });
 
 

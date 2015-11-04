@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.min.css"/>
 </head>
 <style>
     table {
@@ -12,8 +13,8 @@
     }
 
     td {
-        height: 100px;
-        width: 100px;
+        height: 200px;
+        width: 200px;
         border: 1px solid black;
         text-align: center;
     }
@@ -30,14 +31,35 @@
         padding: 5px;
         margin-left: -100px;
     }
-</style>
 
+    #overlay {
+        height: 100%;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.1);
+        position: absolute;
+    }
+</style>
 <body>
 
-<div id="signup">
-    <label for="username">Username: </label><input type="text" id="username">
-    <button>Play!</button>
+<div id="overlay"></div>
+
+<div class="col-md-2 col-md-offset-5" style="margin-top:60px; position: absolute">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h3 class="panel-title">Trifinity</h3>
+        </div>
+        <div class="panel-body">
+            <fieldset>
+                <div class="form-group">
+                    <input class="form-control" placeholder="Give me a username :)" name="username" type="text"
+                           id="username" required>
+                </div>
+                <button class="btn btn-lg btn-success btn-block" type="button">Start playing!</button>
+            </fieldset>
+        </div>
+    </div>
 </div>
+
 
 <table>
     <tbody>
@@ -61,8 +83,8 @@
 
 <script src="node_modules/jquery/dist/jquery.min.js"></script>
 <script src="node_modules/rx/dist/rx.all.js"></script>
+<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="js/trinfinity.js"></script>
 <script src="js/websocketconnection.js"></script>
 </body>
-
 </html>
