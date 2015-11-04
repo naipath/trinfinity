@@ -26,21 +26,22 @@ public class Game {
 
     private final Subject<Message, Message> messages = new SerializedSubject<>(PublishSubject.create());
 
+    private  Observable<Coordinate> coordinateStream ;
+
     @PostConstruct
     public void setup() {
-        Observable<CoordinateMessage> coordinateStream = messages
-                .filter(message -> MessageType.COORDINATE == message.getType())
-                .map(message -> (CoordinateMessage) message);
+        Observable<CoordinateMessage> coordinateMessageStream = messages.ofType(CoordinateMessage.class);
 
-        Observable<SignupMessage> signupStream = messages
-                .filter(message -> MessageType.SIGNUP == message.getType())
-                .map(message -> (SignupMessage) message);
+        Observable<SignupMessage> signupStream = messages.ofType(SignupMessage.class);
 
-        coordinateStream
+
+        coordinateStream = coordinateMessageStream
                 .filter(cm -> userService.get(cm.getSessionId()).hasSignedup())
                 .map(cm -> new Coordinate(cm.getCoordinate(), userService.get(cm.getSessionId())))
-                .filter(boardService::isNotOccupied)
-                .subscribe(this::addCoordinate);
+                .filter(boardService::isNotOccupied);
+                //.subscribe(this::addCoordinate);
+
+        coordinateStream.subscribe(this::addCoordinate);
 
         signupStream.subscribe((signupMessage) ->
                 userService.get(signupMessage.getSessionId()).signupUser(signupMessage.getUsername()));
