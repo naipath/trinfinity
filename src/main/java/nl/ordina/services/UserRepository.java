@@ -9,7 +9,7 @@ import javax.websocket.Session;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserService {
+public class UserRepository {
 
     private final Map<String, User> users = new HashMap<>();
 

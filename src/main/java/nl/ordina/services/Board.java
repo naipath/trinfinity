@@ -11,19 +11,19 @@ import rx.Observable;
 
 public class Board {
 
-    private final Set<Field> board = new HashSet<>();
+    private final Set<Field> fields = new HashSet<>();
 
     public void add(Field field) {
-        board.add(field);
+        fields.add(field);
     }
 
     public boolean isNotOccupied(Field field) {
-        return !board.stream().anyMatch(c -> c.equals(field));
+        return fields.stream().noneMatch(c -> c.equals(field));
     }
 
     public Observable<Field> getAllCoordinates() {
         return Observable.create(subscriber -> {
-            board.forEach(subscriber::onNext);
+            fields.forEach(subscriber::onNext);
             subscriber.onCompleted();
         });
     }
@@ -32,12 +32,12 @@ public class Board {
         users.subscribe(
           user -> user.sendMessage(new GameEndingMessage(username)),
           Throwable::printStackTrace,
-          board::clear
+          fields::clear
         );
     }
 
     private List<Field> getCoordinatesFromUser(String sessionId) {
-        return board.stream().filter(c -> c.matchesSessionId(sessionId)).collect(Collectors.toList());
+        return fields.stream().filter(c -> c.matchesSessionId(sessionId)).collect(Collectors.toList());
     }
 
     public boolean isWinningConditionMet(Field field) {
@@ -60,6 +60,6 @@ public class Board {
     }
 
     public void resetGame() {
-        board.clear();
+        fields.clear();
     }
 }
