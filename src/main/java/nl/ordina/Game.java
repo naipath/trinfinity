@@ -3,7 +3,7 @@ package nl.ordina;
 import nl.ordina.message.CoordinateMessage;
 import nl.ordina.message.Message;
 import nl.ordina.message.SignupMessage;
-import nl.ordina.services.BoardService;
+import nl.ordina.services.Board;
 import nl.ordina.services.UserService;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -19,7 +19,7 @@ import javax.websocket.Session;
 public class Game {
 
     @Inject
-    private BoardService boardService;
+    private Board boardService;
     @Inject
     private UserService userService;
 

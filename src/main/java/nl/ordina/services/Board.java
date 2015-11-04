@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class BoardService {
+public class Board {
 
     private final Set<Field> board = new HashSet<>();
 
