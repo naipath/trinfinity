@@ -2,16 +2,15 @@ package nl.ordina;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.ordina.message.Message;
+import nl.ordina.message.MessageDecoder;
 
 import javax.inject.Inject;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 
-@ServerEndpoint(value = "/actions")
+@ServerEndpoint(value = "/actions", decoders = {MessageDecoder.class})
 public class WebsocketBoundary {
-
-    private final ObjectMapper mapper = new ObjectMapper();
 
     @Inject private Game game;
 
@@ -21,8 +20,7 @@ public class WebsocketBoundary {
     }
 
     @OnMessage
-    public void onMessage(Session s, String json) throws IOException {
-        Message message = mapper.readValue(json, Message.class);
+    public void onMessage(Session s, Message message) throws IOException {
         message.setSessionId(s.getId());
         game.getMessages().onNext(message);
     }

@@ -23,7 +23,6 @@ public class Game {
     private UserRepository users;
 
     private final Subject<Message, Message> messages = new SerializedSubject<>(PublishSubject.create());
-
     private Observable<Field> coordinateStream;
 
     @PostConstruct
