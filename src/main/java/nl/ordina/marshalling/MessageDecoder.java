@@ -1,6 +1,7 @@
-package nl.ordina.message;
+package nl.ordina.marshalling;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import nl.ordina.message.Message;
 
 import javax.websocket.DecodeException;
 import javax.websocket.Decoder;

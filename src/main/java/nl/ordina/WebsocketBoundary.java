@@ -1,15 +1,17 @@
 package nl.ordina;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.ordina.message.Message;
-import nl.ordina.message.MessageDecoder;
+import nl.ordina.marshalling.MessageDecoder;
+import nl.ordina.marshalling.MessageEncoder;
 
 import javax.inject.Inject;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 
-@ServerEndpoint(value = "/actions", decoders = {MessageDecoder.class})
+@ServerEndpoint(value = "/actions",
+        decoders = {MessageDecoder.class},
+        encoders = {MessageEncoder.class})
 public class WebsocketBoundary {
 
     @Inject private Game game;
