@@ -9,12 +9,10 @@ import java.security.SecureRandom;
 
 public class User {
 
-    private final ObjectMapper mapper = new ObjectMapper();
-
-    public static final SecureRandom SECURE_RANDOM = new SecureRandom();
-
-    private final Session session;
     public final String hexColor;
+
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+    private final Session session;
     private String username;
 
     public User(Session session) {
