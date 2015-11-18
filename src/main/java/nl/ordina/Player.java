@@ -6,8 +6,10 @@ import rx.Observer;
 import javax.websocket.Session;
 import java.awt.*;
 import java.security.SecureRandom;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 
-public class Player implements Observer<Field> {
+public class Player implements Observer<Field>, Comparable<Player> {
 
     public final String hexColor;
 
@@ -60,8 +62,16 @@ public class Player implements Observer<Field> {
 
     @Override
     public void onNext(Field field) {
-
         this.sendField(field);
+    }
 
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append(name).toString();
+    }
+
+    @Override
+    public int compareTo(Player that) {
+        return this.getSessionId().compareTo(that.getSessionId());
     }
 }

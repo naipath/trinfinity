@@ -9,25 +9,28 @@ import nl.ordina.services.PlayerRepository;
 import rx.Observable;
 import rx.subjects.ReplaySubject;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.websocket.Session;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 
 @ApplicationScoped
 public class Game {
 
-    @Inject
     private Board board;
-    @Inject
-    private PlayerRepository players;
+    private final PlayerRepository players = new PlayerRepository();
 
-    private final ReplaySubject<Message> messages = ReplaySubject.create();
+    private ReplaySubject<Message> messages;
     private Observable<Field> fieldStream;
     private Observable<GameEndingMessage> gameEndingObservable;
 
-    @PostConstruct
-    public void setup() {
+    public Game() {
+        initialize();
+    }
+
+    private void initialize() {
+        board = new Board();
+        messages = ReplaySubject.create();
         fieldStream = messages.ofType(CoordinateMessage.class)
             .filter(cm -> players.get(cm.getSessionId()).hasSignedup())
             .map(cm -> new Field(cm.getX(), cm.getY(), players.get(cm.getSessionId())))
@@ -37,10 +40,10 @@ public class Game {
 
         gameEndingObservable = fieldStream
             .filter(board::isWinningConditionMet)
+            .doOnNext(f -> resetGame())
             .map(field -> new GameEndingMessage(field.player.getName()));
 
         messages.ofType(SignupMessage.class).subscribe(
-            message -> players.get(message.getSessionId()).signup(message.getName()));
     }
 
     public void addPlayer(Session session) {
@@ -56,13 +59,16 @@ public class Game {
     }
 
     public void resetGame() {
-        board.resetGame();
-//        this.setup();
-
         players.sendReset();
+        initialize();
     }
 
     public void send(Message message) {
         messages.onNext(message);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append(board).append(players).toString();
     }
 }

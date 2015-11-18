@@ -3,8 +3,10 @@ package nl.ordina;
 import nl.ordina.message.CoordinateMessage;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 
-public class Field {
+public class Field implements Comparable<Field> {
 
     public final int relativeX;
     public final int relativeY;
@@ -23,7 +25,7 @@ public class Field {
 
     public boolean matches(int xCoordinate, int yCoordinate) {
         return relativeX == xCoordinate
-                && relativeY == yCoordinate;
+            && relativeY == yCoordinate;
     }
 
     public boolean matchesSessionId(String sessionId) {
@@ -32,7 +34,7 @@ public class Field {
 
     public boolean nextTo(Field field) {
         return !this.equals(field) && (field.relativeX >= relativeX - 1 && field.relativeX <= relativeX + 1)
-                && (field.relativeY >= relativeY - 1 && field.relativeY <= relativeY + 1);
+            && (field.relativeY >= relativeY - 1 && field.relativeY <= relativeY + 1);
     }
 
     public String getSessionId() {
@@ -47,16 +49,26 @@ public class Field {
     public boolean equals(Object o) {
         Field other = (Field) o;
         return new EqualsBuilder()
-                .append(this.relativeX, other.relativeX)
-                .append(this.relativeY, other.relativeY)
-                .isEquals();
+            .append(this.relativeX, other.relativeX)
+            .append(this.relativeY, other.relativeY)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(this.relativeX)
-                .append(this.relativeY)
-                .hashCode();
+            .append(this.relativeX)
+            .append(this.relativeY)
+            .hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    }
+
+    @Override
+    public int compareTo(Field that) {
+        return (this.relativeX - that.relativeX) + (this.relativeY - that.relativeY);
     }
 }

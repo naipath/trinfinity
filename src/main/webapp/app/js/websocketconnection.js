@@ -19,7 +19,7 @@ var resetGame = someObservable.filter(function (data) {
 });
 
 gameEnding.subscribe(function (data) {
-    if (data.name == userName) {
+    if (data.name === name) {
         alert('Game has ended, YOU have won.');
     } else {
         alert('Game has ended, human ' + data.name + ' has won.');
