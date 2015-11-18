@@ -19,10 +19,10 @@ var resetGame = someObservable.filter(function (data) {
 });
 
 gameEnding.subscribe(function (data) {
-    if (data.username == userName) {
+    if (data.name == userName) {
         alert('Game has ended, YOU have won.');
     } else {
-        alert('Game has ended, human ' + data.username + ' has won.');
+        alert('Game has ended, human ' + data.name + ' has won.');
     }
     resetTiles();
 });
