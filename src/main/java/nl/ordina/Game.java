@@ -30,7 +30,7 @@ public class Game {
     public void setup() {
         fieldStream = messages.ofType(CoordinateMessage.class)
             .filter(cm -> players.get(cm.getSessionId()).hasSignedup())
-            .map(cm -> new Field(cm.getCoordinate(), players.get(cm.getSessionId())))
+            .map(cm -> new Field(cm.getX(), cm.getY(), players.get(cm.getSessionId())))
             .distinct();
 
         fieldStream.subscribe(board);

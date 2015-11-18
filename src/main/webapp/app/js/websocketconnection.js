@@ -29,7 +29,7 @@ gameEnding.subscribe(function (data) {
 
 handleCoordinate.subscribe(function (data) {
     console.log(data);
-    $('#' + data.coordinate).css('background', data.hexColor);
+    $('tr:eq(' + data.x + ') td:eq(' + data.y + ')').css('background', data.hexColor);
 });
 
 resetGame.subscribe(function (data) {

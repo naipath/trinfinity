@@ -6,18 +6,15 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 public class Field {
 
-    private static final String SEPERATOR = "_";
-
     public final int relativeX;
     public final int relativeY;
     public final Player player;
 
-    public Field(String coordinate, Player player) {
-        String[] split = coordinate.split(SEPERATOR);
-        relativeX = Integer.parseInt(split[0]);
-        relativeY = Integer.parseInt(split[1]);
-
+    public Field(int x, int y, Player player) {
+        relativeX = x;
+        relativeY = y;
         this.player = player;
+
     }
 
     public boolean matches(Field field) {
@@ -38,16 +35,12 @@ public class Field {
                 && (field.relativeY >= relativeY - 1 && field.relativeY <= relativeY + 1);
     }
 
-    private String getStringCoordinate() {
-        return relativeX + SEPERATOR + relativeY;
-    }
-
     public String getSessionId() {
         return player.getSessionId();
     }
 
     public CoordinateMessage generateMessage() {
-        return new CoordinateMessage(getStringCoordinate(), player.hexColor, player.getSessionId());
+        return new CoordinateMessage(relativeX, relativeY, player.hexColor, player.getSessionId());
     }
 
     @Override

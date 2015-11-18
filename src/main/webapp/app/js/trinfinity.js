@@ -1,12 +1,10 @@
 Rx.Observable.fromEvent($('table'), 'click')
     .map(function (evt) {
-        return evt.target.id
+        var col = $(evt.target).index();
+        var row = $(evt.target).parent().index();
+        return {type: 'COORDINATE',x: row, y: col};
     })
-    .subscribeOnNext(function (id) {
-        var message = {
-            type: 'COORDINATE',
-            coordinate: id
-        };
+    .subscribeOnNext(function (message) {
         ws.send(JSON.stringify(message));
     });
 
@@ -14,10 +12,10 @@ var userName;
 
 Rx.Observable.fromEvent($('button'), 'click')
     .subscribeOnNext(function (event) {
-        userName = $('#username').val();
+        name = $('#username').val();
         var message = {
             type: 'SIGNUP',
-            username: userName
+            name: name
         };
         ws.send(JSON.stringify(message));
         $('.panel').remove();

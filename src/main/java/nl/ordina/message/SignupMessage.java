@@ -4,7 +4,7 @@ import static nl.ordina.message.MessageType.SIGNUP;
 
 public class SignupMessage extends Message {
 
-    public String name;
+    private String name;
 
     public SignupMessage() {
         setType(SIGNUP);

@@ -4,7 +4,9 @@ import static nl.ordina.message.MessageType.COORDINATE;
 
 public class CoordinateMessage extends Message {
 
-    private String coordinate;
+    private int x;
+    private int y;
+
     private String hexColor;
     private String sessionId;
 
@@ -12,15 +14,12 @@ public class CoordinateMessage extends Message {
         setType(COORDINATE);
     }
 
-    public CoordinateMessage(String coordinate, String hexColor, String sessionId) {
-        this.coordinate = coordinate;
+    public CoordinateMessage(int x, int y, String hexColor, String sessionId) {
+        this.x = x;
+        this.y = y;
         this.hexColor = hexColor;
         this.sessionId = sessionId;
         setType(COORDINATE);
-    }
-
-    public String getCoordinate() {
-        return coordinate;
     }
 
     public String getHexColor() {
@@ -31,15 +30,27 @@ public class CoordinateMessage extends Message {
         return sessionId;
     }
 
-    public void setCoordinate(String coordinate) {
-        this.coordinate = coordinate;
-    }
-
     public void setHexColor(String hexColor) {
         this.hexColor = hexColor;
     }
 
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 }
