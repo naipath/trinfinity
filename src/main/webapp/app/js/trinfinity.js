@@ -10,6 +10,8 @@ Rx.Observable.fromEvent($('table'), 'click')
         ws.send(JSON.stringify(message));
     });
 
+var userName;
+
 Rx.Observable.fromEvent($('button'), 'click')
     .subscribeOnNext(function (event) {
         userName = $('#username').val();
@@ -22,5 +24,25 @@ Rx.Observable.fromEvent($('button'), 'click')
         $('#overlay').remove();
     });
 
+// Jquery methods to add rows and columns
+function addRow() {
+    var clone = $('table').find('tr:last').clone().css('display', 'table-row');
+    $('tr:last').before(clone);
+}
 
-var userName;
+function addColumnAfter() {
+    $('table').find('tr').each(function(){
+        $(this).find('td:last').eq(0).after('<td></td>');
+    });
+}
+function addColumnBefore() {
+    $('table').find('tr').each(function(){
+        $(this).find('td:first').eq(0).before('<td></td>');
+    });
+}
+
+function addAll() {
+    addColumnBefore();
+    addColumnAfter();
+    addRow();
+}

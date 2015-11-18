@@ -60,6 +60,10 @@
     </div>
 </div>
 
+<button class="btn btn-lg btn-danger" onclick="addRow()">Add row</button>
+<button class="btn btn-lg btn-danger" onclick="addColumnAfter()">Add Column</button>
+<button class="btn btn-lg btn-danger" onclick="addColumnBefore()">Add Column before</button>
+<button class="btn btn-lg btn-danger" onclick="addAll()">Add all</button>
 
 <table>
     <tbody>
@@ -77,6 +81,13 @@
         <td id="-1_1"></td>
         <td id="0_1"></td>
         <td id="1_1"></td>
+    </tr>
+
+    <!-- Invisible to keep to reuse this row when adding -->
+    <tr style="display: none">
+        <td></td>
+        <td></td>
+        <td></td>
     </tr>
     </tbody>
 </table>
