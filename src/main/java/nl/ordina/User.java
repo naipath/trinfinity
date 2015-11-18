@@ -1,13 +1,13 @@
 package nl.ordina;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.ordina.message.Message;
+import rx.Observer;
 
 import javax.websocket.Session;
 import java.awt.*;
 import java.security.SecureRandom;
 
-public class User {
+public class User implements Observer<Field> {
 
     public final String hexColor;
 
@@ -29,10 +29,12 @@ public class User {
     }
 
     public void sendMessage(Message message) {
-        session.getAsyncRemote().sendObject(message);
+        if (session.isOpen()) {
+            session.getAsyncRemote().sendObject(message);
+        }
     }
 
-    public void sendCoordinate(Field field) {
+    public void sendField(Field field) {
         sendMessage(field.generateMessage());
     }
 
@@ -46,5 +48,20 @@ public class User {
 
     public boolean hasSignedup() {
         return username != null;
+    }
+
+    @Override
+    public void onCompleted() {
+    }
+
+    @Override
+    public void onError(Throwable e) {
+    }
+
+    @Override
+    public void onNext(Field field) {
+
+        this.sendField(field);
+
     }
 }

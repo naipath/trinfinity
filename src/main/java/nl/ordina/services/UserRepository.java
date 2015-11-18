@@ -27,7 +27,7 @@ public class UserRepository {
     }
 
     public void sendCoordinateToAllUsers(Field field) {
-        this.getAllUsers().subscribe(user -> user.sendCoordinate(field));
+        this.getAllUsers().subscribe(user -> user.sendField(field));
     }
 
     public Observable<User> getAllUsers() {

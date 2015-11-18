@@ -1,18 +1,19 @@
 package nl.ordina;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.websocket.Session;
 import nl.ordina.message.CoordinateMessage;
+import nl.ordina.message.GameEndingMessage;
 import nl.ordina.message.Message;
 import nl.ordina.message.SignupMessage;
 import nl.ordina.services.Board;
 import nl.ordina.services.UserRepository;
 import rx.Observable;
-import rx.subjects.PublishSubject;
-import rx.subjects.SerializedSubject;
+import rx.subjects.ReplaySubject;
 import rx.subjects.Subject;
+
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.websocket.Session;
 
 @ApplicationScoped
 public class Game {
@@ -22,8 +23,9 @@ public class Game {
     @Inject
     private UserRepository users;
 
-    private final Subject<Message, Message> messages = new SerializedSubject<>(PublishSubject.create());
-    private Observable<Field> coordinateStream;
+    private final ReplaySubject<Message> messages = ReplaySubject.create();
+    private Observable<Field> fieldStream;
+    private Observable<GameEndingMessage> gameEndingObservable;
 
     @PostConstruct
     public void setup() {
@@ -31,32 +33,24 @@ public class Game {
 
         Observable<SignupMessage> signupStream = messages.ofType(SignupMessage.class);
 
-        coordinateStream = coordinateMessageStream
-          .filter(cm -> users.get(cm.getSessionId()).hasSignedup())
-          .map(cm -> new Field(cm.getCoordinate(), users.get(cm.getSessionId())))
-          .filter(board::isNotOccupied);
-        //.subscribe(this::addCoordinate);
+        fieldStream = coordinateMessageStream
+                .filter(cm -> users.get(cm.getSessionId()).hasSignedup())
+                .map(cm -> new Field(cm.getCoordinate(), users.get(cm.getSessionId())))
+                .distinct();
 
-        coordinateStream.subscribe(this::addCoordinate);
+        fieldStream.subscribe(board);
+
+        gameEndingObservable = fieldStream.filter(board::isWinningConditionMet).map(field -> new GameEndingMessage(field.user.getUsername()));
 
         signupStream.subscribe((signupMessage)
           -> users.get(signupMessage.getSessionId()).signupUser(signupMessage.getUsername()));
     }
 
-    public void addCoordinate(Field field) {
-        board.add(field);
-
-        users.sendCoordinateToAllUsers(field);
-
-        if (board.isWinningConditionMet(field)) {
-            board.gameEnding(users.getAllUsers(), users.get(field.getSessionId()).getUsername());
-        }
-    }
-
     public void addUser(Session session) {
         users.add(session);
         User user = users.get(session.getId());
-        board.getAllCoordinates().subscribe(user::sendCoordinate);
+        fieldStream.subscribe(user);
+        gameEndingObservable.subscribe(user::sendMessage);
     }
 
     public void removeUser(Session session) {
@@ -65,6 +59,8 @@ public class Game {
 
     public void resetGame() {
         board.resetGame();
+//        this.setup();
+
         users.sendReset();
     }
 
