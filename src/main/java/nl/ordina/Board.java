@@ -1,6 +1,5 @@
-package nl.ordina.services;
+package nl.ordina;
 
-import nl.ordina.Field;
 import rx.Observer;
 
 import java.util.List;
@@ -61,6 +60,6 @@ public class Board implements Observer<Field> {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append(this.fields).toString();
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(this.fields).toString();
     }
 }
