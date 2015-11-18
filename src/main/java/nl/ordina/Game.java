@@ -34,16 +34,17 @@ public class Game {
         Observable<SignupMessage> signupStream = messages.ofType(SignupMessage.class);
 
         fieldStream = coordinateMessageStream
-                .filter(cm -> users.get(cm.getSessionId()).hasSignedup())
-                .map(cm -> new Field(cm.getCoordinate(), users.get(cm.getSessionId())))
-                .distinct();
+            .filter(cm -> users.get(cm.getSessionId()).hasSignedup())
+            .map(cm -> new Field(cm.getCoordinate(), users.get(cm.getSessionId())))
+            .distinct();
 
         fieldStream.subscribe(board);
 
-        gameEndingObservable = fieldStream.filter(board::isWinningConditionMet).map(field -> new GameEndingMessage(field.user.getUsername()));
+        gameEndingObservable = fieldStream.filter(board::isWinningConditionMet).map(field -> new GameEndingMessage(
+            field.user.getUsername()));
 
         signupStream.subscribe((signupMessage)
-          -> users.get(signupMessage.getSessionId()).signupUser(signupMessage.getUsername()));
+            -> users.get(signupMessage.getSessionId()).signupUser(signupMessage.getUsername()));
     }
 
     public void addUser(Session session) {
@@ -64,7 +65,7 @@ public class Game {
         users.sendReset();
     }
 
-    public Subject<Message, Message> getMessages() {
-        return messages;
+    public void send(Message message) {
+        messages.onNext(message);
     }
 }

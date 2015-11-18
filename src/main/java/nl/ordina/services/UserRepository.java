@@ -13,7 +13,6 @@ public class UserRepository {
 
     private final Map<String, User> users = new HashMap<>();
 
-
     public void add(Session session) {
         users.put(session.getId(), new User(session));
     }
@@ -26,10 +25,6 @@ public class UserRepository {
         users.remove(session.getId());
     }
 
-    public void sendCoordinateToAllUsers(Field field) {
-        this.getAllUsers().subscribe(user -> user.sendField(field));
-    }
-
     public Observable<User> getAllUsers() {
         return Observable.create(subscriber -> {
             users.values().stream().forEach(subscriber::onNext);
@@ -37,7 +32,7 @@ public class UserRepository {
         });
     }
 
-    public void sendReset(){
+    public void sendReset() {
         this.getAllUsers().subscribe(user -> user.sendMessage(new ResetMessage()));
     }
 }

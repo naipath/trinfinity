@@ -10,11 +10,12 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 
 @ServerEndpoint(value = "/actions",
-        decoders = {MessageDecoder.class},
-        encoders = {MessageEncoder.class})
+    decoders = {MessageDecoder.class},
+    encoders = {MessageEncoder.class})
 public class WebsocketBoundary {
 
-    @Inject private Game game;
+    @Inject
+    private Game game;
 
     @OnOpen
     public void onOpen(Session session) {
@@ -24,7 +25,7 @@ public class WebsocketBoundary {
     @OnMessage
     public void onMessage(Session s, Message message) throws IOException {
         message.setSessionId(s.getId());
-        game.getMessages().onNext(message);
+        game.send(message);
     }
 
     @OnClose
