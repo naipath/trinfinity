@@ -8,14 +8,15 @@ import javax.inject.Inject;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import javax.inject.Singleton;
 
 @ServerEndpoint(value = "/actions",
     decoders = {MessageDecoder.class},
     encoders = {MessageEncoder.class})
+@Singleton
 public class WebsocketBoundary {
 
-    @Inject
-    private Game game;
+    private Game game = new Game();
 
     @OnOpen
     public void onOpen(Session session) {

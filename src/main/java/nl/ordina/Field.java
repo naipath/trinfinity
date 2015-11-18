@@ -3,8 +3,6 @@ package nl.ordina;
 import nl.ordina.message.CoordinateMessage;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
 
 public class Field implements Comparable<Field> {
 
@@ -64,7 +62,7 @@ public class Field implements Comparable<Field> {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+        return String.format("[%d/%d]", relativeX, relativeY);
     }
 
     @Override

@@ -67,7 +67,7 @@ public class Player implements Observer<Field>, Comparable<Player> {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append(name).toString();
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(name).toString();
     }
 
     @Override

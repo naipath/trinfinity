@@ -4,17 +4,14 @@ import nl.ordina.message.CoordinateMessage;
 import nl.ordina.message.GameEndingMessage;
 import nl.ordina.message.Message;
 import nl.ordina.message.SignupMessage;
-import nl.ordina.services.Board;
 import nl.ordina.services.PlayerRepository;
 import rx.Observable;
 import rx.subjects.ReplaySubject;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.websocket.Session;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
-@ApplicationScoped
 public class Game {
 
     private Board board;
@@ -45,6 +42,7 @@ public class Game {
 
         messages.ofType(SignupMessage.class).subscribe(
             message -> players.get(message.getSessionId()).signup(message.getName()));
+
         for (Player player : players.getAllPlayers().toList().toBlocking().first()) {
             fieldStream.subscribe(player);
             gameEndingObservable.subscribe(player::sendMessage);
@@ -52,18 +50,18 @@ public class Game {
     }
 
     public void addPlayer(Session session) {
-        players.add(session);
-        Player player = players.get(session.getId());
+        final Player player = new Player(session);
+        players.add(player);
         fieldStream.subscribe(player);
         gameEndingObservable.subscribe(player::sendMessage);
     }
 
     public void removePlayer(Session session) {
+        players.remove(session.getId());
         resetGame();
-        players.remove(session);
     }
 
-    public void resetGame() {
+    private void resetGame() {
         players.sendReset();
         initialize();
     }
@@ -74,6 +72,6 @@ public class Game {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append(board).append(players).toString();
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(board).append(players).toString();
     }
 }
