@@ -1,9 +1,6 @@
 package nl.ordina.services;
 
 import nl.ordina.Field;
-import nl.ordina.User;
-import nl.ordina.message.GameEndingMessage;
-import rx.Observable;
 import rx.Observer;
 
 import java.util.HashSet;
@@ -19,25 +16,25 @@ public class Board implements Observer<Field> {
         board.add(field);
     }
 
-    private List<Field> getCoordinatesFromUser(String sessionId) {
+    private List<Field> getCoordinatesFromPlayer(String sessionId) {
         return board.stream().filter(c -> c.matchesSessionId(sessionId)).collect(Collectors.toList());
     }
 
     public boolean isWinningConditionMet(Field field) {
-        List<Field> userFields = getCoordinatesFromUser(field.getSessionId());
+        List<Field> playerFields = getCoordinatesFromPlayer(field.getSessionId());
 
-        return userFields.stream()
+        return playerFields.stream()
                 .filter(field::nextTo)
-                .filter(coordinate2 -> hasLineOfThree(field, coordinate2, userFields)).count() > 0;
+                .filter(coordinate2 -> hasLineOfThree(field, coordinate2, playerFields)).count() > 0;
     }
 
-    private boolean hasLineOfThree(Field field, Field field2, List<Field> userFields) {
+    private boolean hasLineOfThree(Field field, Field field2, List<Field> fields) {
         int xDiff = field.relativeX - field2.relativeX;
         int yDiff = field.relativeY - field2.relativeY;
 
         if (xDiff != 0 || yDiff != 0) {
-            return userFields.stream().anyMatch(c -> c.matches(field2.relativeX - xDiff, field2.relativeY - yDiff))
-                    || userFields.stream().anyMatch(c -> c.matches(field.relativeX + xDiff, field.relativeY + yDiff));
+            return fields.stream().anyMatch(c -> c.matches(field2.relativeX - xDiff, field2.relativeY - yDiff))
+                    || fields.stream().anyMatch(c -> c.matches(field.relativeX + xDiff, field.relativeY + yDiff));
         }
         return false;
     }
@@ -59,7 +56,7 @@ public class Board implements Observer<Field> {
         board.add(field);
 
         if (isWinningConditionMet(field)) {
-            String winningUser = field.user.getUsername();
+            String winner = field.player.getName();
         }
 
     }

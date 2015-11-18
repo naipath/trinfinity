@@ -4,18 +4,18 @@ import static nl.ordina.message.MessageType.ENDING;
 
 public class GameEndingMessage extends Message {
 
-    private String username;
+    private String name;
 
     public GameEndingMessage() {
         setType(ENDING);
     }
 
-    public GameEndingMessage(String username) {
-        this.username = username;
+    public GameEndingMessage(String name) {
+        this.name = name;
         setType(ENDING);
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 }

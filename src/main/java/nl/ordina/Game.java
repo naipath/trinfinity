@@ -5,10 +5,9 @@ import nl.ordina.message.GameEndingMessage;
 import nl.ordina.message.Message;
 import nl.ordina.message.SignupMessage;
 import nl.ordina.services.Board;
-import nl.ordina.services.UserRepository;
+import nl.ordina.services.PlayerRepository;
 import rx.Observable;
 import rx.subjects.ReplaySubject;
-import rx.subjects.Subject;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -21,7 +20,7 @@ public class Game {
     @Inject
     private Board board;
     @Inject
-    private UserRepository users;
+    private PlayerRepository players;
 
     private final ReplaySubject<Message> messages = ReplaySubject.create();
     private Observable<Field> fieldStream;
@@ -29,40 +28,38 @@ public class Game {
 
     @PostConstruct
     public void setup() {
-        Observable<CoordinateMessage> coordinateMessageStream = messages.ofType(CoordinateMessage.class);
-
-        Observable<SignupMessage> signupStream = messages.ofType(SignupMessage.class);
-
-        fieldStream = coordinateMessageStream
-            .filter(cm -> users.get(cm.getSessionId()).hasSignedup())
-            .map(cm -> new Field(cm.getCoordinate(), users.get(cm.getSessionId())))
+        fieldStream = messages.ofType(CoordinateMessage.class)
+            .filter(cm -> players.get(cm.getSessionId()).hasSignedup())
+            .map(cm -> new Field(cm.getCoordinate(), players.get(cm.getSessionId())))
             .distinct();
 
         fieldStream.subscribe(board);
 
-        gameEndingObservable = fieldStream.filter(board::isWinningConditionMet).map(field -> new GameEndingMessage(
-            field.user.getUsername()));
+        gameEndingObservable = fieldStream
+            .filter(board::isWinningConditionMet)
+            .map(field -> new GameEndingMessage(field.player.getName()));
 
-        signupStream.subscribe((signupMessage)
-            -> users.get(signupMessage.getSessionId()).signupUser(signupMessage.getUsername()));
+        messages.ofType(SignupMessage.class).subscribe(signupMessage
+            -> players.get(signupMessage.getSessionId()).signup(signupMessage.getName()));
     }
 
-    public void addUser(Session session) {
-        users.add(session);
-        User user = users.get(session.getId());
-        fieldStream.subscribe(user);
-        gameEndingObservable.subscribe(user::sendMessage);
+    public void addPlayer(Session session) {
+        players.add(session);
+        Player player = players.get(session.getId());
+        fieldStream.subscribe(player);
+        gameEndingObservable.subscribe(player::sendMessage);
     }
 
-    public void removeUser(Session session) {
-        users.remove(session);
+    public void removePlayer(Session session) {
+        resetGame();
+        players.remove(session);
     }
 
     public void resetGame() {
         board.resetGame();
 //        this.setup();
 
-        users.sendReset();
+        players.sendReset();
     }
 
     public void send(Message message) {

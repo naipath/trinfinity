@@ -7,15 +7,15 @@ import javax.websocket.Session;
 import java.awt.*;
 import java.security.SecureRandom;
 
-public class User implements Observer<Field> {
+public class Player implements Observer<Field> {
 
     public final String hexColor;
 
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
     private final Session session;
-    private String username;
+    private String name;
 
-    public User(Session session) {
+    public Player(Session session) {
         this.session = session;
         this.hexColor = generateRandomHexColor();
     }
@@ -38,16 +38,16 @@ public class User implements Observer<Field> {
         sendMessage(field.generateMessage());
     }
 
-    public void signupUser(String username) {
-        this.username = username;
+    public void signup(String name) {
+        this.name = name;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
     public boolean hasSignedup() {
-        return username != null;
+        return name != null;
     }
 
     @Override

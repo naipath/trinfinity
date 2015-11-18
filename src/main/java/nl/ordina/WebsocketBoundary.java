@@ -19,7 +19,7 @@ public class WebsocketBoundary {
 
     @OnOpen
     public void onOpen(Session session) {
-        game.addUser(session);
+        game.addPlayer(session);
     }
 
     @OnMessage
@@ -30,8 +30,7 @@ public class WebsocketBoundary {
 
     @OnClose
     public void onClose(Session s) {
-        game.resetGame();
-        game.removeUser(s);
+        game.removePlayer(s);
     }
 
     @OnError

@@ -1,11 +1,11 @@
-import com.codeborne.selenide.Selenide;
+package nl.ordina.services;
+
 import org.junit.Test;
-import org.openqa.selenium.By;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
-public class SelenideTest {
+public class SelenideIT {
 
     @Test
     public void testSelenide() {

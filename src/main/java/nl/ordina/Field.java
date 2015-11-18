@@ -10,14 +10,14 @@ public class Field {
 
     public final int relativeX;
     public final int relativeY;
-    public final User user;
+    public final Player player;
 
-    public Field(String coordinate, User user) {
+    public Field(String coordinate, Player player) {
         String[] split = coordinate.split(SEPERATOR);
         relativeX = Integer.parseInt(split[0]);
         relativeY = Integer.parseInt(split[1]);
 
-        this.user = user;
+        this.player = player;
     }
 
     public boolean matches(Field field) {
@@ -30,7 +30,7 @@ public class Field {
     }
 
     public boolean matchesSessionId(String sessionId) {
-        return user.getSessionId().equals(sessionId);
+        return player.getSessionId().equals(sessionId);
     }
 
     public boolean nextTo(Field field) {
@@ -43,11 +43,11 @@ public class Field {
     }
 
     public String getSessionId() {
-        return user.getSessionId();
+        return player.getSessionId();
     }
 
     public CoordinateMessage generateMessage() {
-        return new CoordinateMessage(getStringCoordinate(), user.hexColor, user.getSessionId());
+        return new CoordinateMessage(getStringCoordinate(), player.hexColor, player.getSessionId());
     }
 
     @Override
