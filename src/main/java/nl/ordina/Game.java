@@ -44,6 +44,11 @@ public class Game {
             .map(field -> new GameEndingMessage(field.player.getName()));
 
         messages.ofType(SignupMessage.class).subscribe(
+            message -> players.get(message.getSessionId()).signup(message.getName()));
+        for (Player player : players.getAllPlayers().toList().toBlocking().first()) {
+            fieldStream.subscribe(player);
+            gameEndingObservable.subscribe(player::sendMessage);
+        }
     }
 
     public void addPlayer(Session session) {
