@@ -39,8 +39,8 @@ public class Game {
             .filter(board::isWinningConditionMet)
             .map(field -> new GameEndingMessage(field.player.getName()));
 
-        messages.ofType(SignupMessage.class).subscribe(signupMessage
-            -> players.get(signupMessage.getSessionId()).signup(signupMessage.getName()));
+        messages.ofType(SignupMessage.class).subscribe(
+            message -> players.get(message.getSessionId()).signup(message.getName()));
     }
 
     public void addPlayer(Session session) {

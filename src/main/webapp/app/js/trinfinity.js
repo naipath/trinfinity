@@ -17,7 +17,7 @@ Rx.Observable.fromEvent($('button'), 'click')
         userName = $('#username').val();
         var message = {
             type: 'SIGNUP',
-            username: userName
+            name: userName
         };
         ws.send(JSON.stringify(message));
         $('.panel').remove();
