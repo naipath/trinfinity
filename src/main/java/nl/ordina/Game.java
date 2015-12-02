@@ -1,18 +1,14 @@
 package nl.ordina;
 
-import nl.ordina.message.CoordinateMessage;
-import nl.ordina.message.GameEndingMessage;
-import nl.ordina.message.Message;
-import nl.ordina.message.SignupMessage;
+import nl.ordina.message.*;
 import nl.ordina.services.PlayerRepository;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 import rx.Observable;
 import rx.subjects.ReplaySubject;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Singleton;
 import javax.websocket.Session;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
 
 @ApplicationScoped
 public class Game {
@@ -58,6 +54,9 @@ public class Game {
         players.add(player);
         fieldStream.subscribe(player);
         gameEndingObservable.subscribe(player::sendMessage);
+
+        players.getAllPlayers()
+                 .subscribe(player1 -> player1.sendMessage(new ExpandMessage()));
     }
 
     public void removePlayer(Session session) {
