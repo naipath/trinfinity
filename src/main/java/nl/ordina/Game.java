@@ -4,6 +4,8 @@ import nl.ordina.message.CoordinateMessage;
 import nl.ordina.message.GameEndingMessage;
 import nl.ordina.message.Message;
 import nl.ordina.message.SignupMessage;
+import nl.ordina.message.*;
+import nl.ordina.services.Board;
 import nl.ordina.services.PlayerRepository;
 import rx.Observable;
 import rx.subjects.ReplaySubject;
@@ -58,6 +60,9 @@ public class Game {
         players.add(player);
         fieldStream.subscribe(player);
         gameEndingObservable.subscribe(player::sendMessage);
+
+        players.getAllPlayers()
+                 .subscribe(player1 -> player1.sendMessage(new ExpandMessage()));
     }
 
     public void removePlayer(Session session) {
