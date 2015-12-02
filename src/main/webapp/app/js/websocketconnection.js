@@ -36,14 +36,13 @@ gameEnding.subscribe(function (data) {
 
 newTurn.subscribe(function (data) {
     if (data.name === name) {
-        alert('Your Turn!');
+        $('#turn').innerHTML('Your Turn!');
     } else {
-        alert( data.name + '\'s turn.');
+        $('#turn').innerHTML( data.name);
     }
 });
 
 handleCoordinate.subscribe(function (data) {
-    console.log(data);
     $('tr:eq(' + data.x + ') td:eq(' + data.y + ')').css('background', data.hexColor);
 });
 
