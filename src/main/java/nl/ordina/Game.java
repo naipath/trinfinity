@@ -68,7 +68,7 @@ public class Game {
     public void removePlayer(Session session) {
         final String id = session.getId();
         players.remove(id);
-        turn.add(players.get(id));
+        turn.remove(players.get(id));
         resetGame();
     }
 
