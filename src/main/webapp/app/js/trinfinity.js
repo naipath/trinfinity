@@ -10,14 +10,17 @@ Rx.Observable.fromEvent($('table'), 'click')
 
 var name;
 
-Rx.Observable.fromEvent($('button'), 'click')
+var enterStream = Rx.Observable.fromEvent($('#name'), 'keyup') .filter(function(data){ return data.keyCode == 13});
+var clickStream = Rx.Observable.fromEvent($('button'), 'click');
+
+Rx.Observable.merge(enterStream, clickStream)
+    .filter(function (data) {return $('#name').val();})
     .subscribeOnNext(function (event) {
         name = $('#name').val();
-        var message = {
+        ws.send(JSON.stringify({
             type: 'SIGNUP',
             name: name
-        };
-        ws.send(JSON.stringify(message));
+        }));
         $('.panel').remove();
         $('#overlay').remove();
     });
