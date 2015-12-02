@@ -41,7 +41,11 @@ public class Game {
             .map(field -> new GameEndingMessage(field.player.getName()));
 
         messages.ofType(SignupMessage.class).subscribe(
-            message -> players.get(message.getSessionId()).signup(message.getName()));
+                message -> {
+                    players.get(message.getSessionId()).signup(message.getName());
+                    players.getAllPlayers()
+                            .subscribe(player1 -> player1.sendMessage(new ExpandMessage(players.boardSize())));
+                });
 
         for (Player player : players.getAllPlayers().toList().toBlocking().first()) {
             fieldStream.subscribe(player);
@@ -54,9 +58,6 @@ public class Game {
         players.add(player);
         fieldStream.subscribe(player);
         gameEndingObservable.subscribe(player::sendMessage);
-
-        players.getAllPlayers()
-                 .subscribe(player1 -> player1.sendMessage(new ExpandMessage(players.boardSize())));
     }
 
     public void removePlayer(Session session) {
