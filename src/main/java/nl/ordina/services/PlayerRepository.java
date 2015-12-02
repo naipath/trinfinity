@@ -1,11 +1,12 @@
 package nl.ordina.services;
 
+import java.util.Collection;
 import nl.ordina.Player;
 import nl.ordina.message.ResetMessage;
-import rx.Observable;
 
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Stream;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
@@ -32,19 +33,16 @@ public class PlayerRepository {
         return players.size() + 1;
     }
 
-    public Observable<Player> getAllPlayers() {
-        return Observable.create(subscriber -> {
-            players.values().stream().forEach(subscriber::onNext);
-            subscriber.onCompleted();
-        });
+    public Stream<Player> getAllPlayers() {
+        return players.values().stream();
     }
 
-    public Observable<Player> getAllSignupPlayers () {
+    public Stream<Player> getAllSignedUpPlayers() {
         return getAllPlayers().filter(Player::hasSignedup);
     }
 
     public void sendReset() {
-        this.getAllPlayers().subscribe(player -> player.sendMessage(new ResetMessage()));
+        this.getAllPlayers().forEach(player -> player.sendMessage(new ResetMessage()));
     }
 
     @Override

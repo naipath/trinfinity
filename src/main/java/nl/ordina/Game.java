@@ -2,8 +2,6 @@ package nl.ordina;
 
 import nl.ordina.message.*;
 import nl.ordina.services.PlayerRepository;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
 import rx.Observable;
 import rx.subjects.ReplaySubject;
 
@@ -13,57 +11,57 @@ import javax.websocket.Session;
 @ApplicationScoped
 public class Game {
 
-    private Board board;
     private Turn turn;
     private final PlayerRepository players = new PlayerRepository();
 
     private ReplaySubject<Message> messages;
-    private Observable<Field> fieldStream;
-    private Observable<GameEndingMessage> gameEndingObservable;
+    private Observable<Field> fields;
+    private Observable<GameEndingMessage> gameOver;
 
     public Game() {
         initialize();
     }
 
     private void initialize() {
-        board = new Board();
+        Board board = new Board();
         turn = new Turn();
         messages = ReplaySubject.create();
-        fieldStream = messages.ofType(CoordinateMessage.class)
-                .filter(cm -> players.get(cm.getSessionId()).hasSignedup())
-                .filter(cm -> turn.hasTurn(players.get(cm.getSessionId())))
-                .map(cm -> new Field(cm.getX(), cm.getY(), players.get(cm.getSessionId())))
-                .distinct()
-                .share();
+        fields = messages.ofType(CoordinateMessage.class)
+            .filter(cm -> players.get(cm.getSessionId()).hasSignedup())
+            .filter(cm -> turn.hasTurn(players.get(cm.getSessionId())))
+            .map(cm -> new Field(cm.getX(), cm.getY(), players.get(cm.getSessionId())))
+            .share();
 
-        fieldStream.subscribe(board);
-        fieldStream.subscribe(turn);
+        fields.subscribe(board);
+        fields.subscribe(turn);
 
-        gameEndingObservable = fieldStream
+        gameOver = fields
             .filter(board::isWinningConditionMet)
             .doOnNext(f -> resetGame())
-            .map(field -> new GameEndingMessage(field.player.getName())).share();
+            .map(field -> new GameEndingMessage(field.player.getName()))
+            .share();
 
-        messages.ofType(SignupMessage.class).subscribe(
+        Observable<SignupMessage> signup = messages.ofType(SignupMessage.class);
+        signup.subscribe(
             message -> {
                 players.get(message.getSessionId()).signup(message.getName());
-                players.getAllSignupPlayers()
-                        .subscribe(player1 -> player1.sendMessage(new ExpandMessage(players.boardSize())));
+                players.getAllSignedUpPlayers().forEach(p -> p.sendMessage(new ExpandMessage(players.boardSize())));
             });
 
-        for (Player player : players.getAllPlayers().toList().toBlocking().first()) {
-            fieldStream.subscribe(player);
-            gameEndingObservable.subscribe(player::sendMessage);
-            turn.add(player);
-        }
+        players.getAllPlayers().forEach(
+            player -> {
+                fields.subscribe(player);
+                gameOver.subscribe(player::sendMessage);
+                turn.add(player);
+            });
     }
 
     public void addPlayer(Session session) {
         final Player player = new Player(session);
         players.add(player);
         turn.add(player);;
-        fieldStream.subscribe(player);
-        gameEndingObservable.subscribe(player::sendMessage);
+        fields.subscribe(player);
+        gameOver.subscribe(player::sendMessage);
     }
 
     public void removePlayer(Session session) {
@@ -80,11 +78,6 @@ public class Game {
 
     public void send(Message message) {
         messages.onNext(message);
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(board).append(players).toString();
     }
 
 }
