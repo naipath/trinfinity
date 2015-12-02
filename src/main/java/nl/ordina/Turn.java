@@ -33,12 +33,11 @@ public class Turn implements Observer<Field> {
 
     @Override
     public void onCompleted() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void onError(Throwable e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new RuntimeException(e.getMessage());
     }
 
     @Override

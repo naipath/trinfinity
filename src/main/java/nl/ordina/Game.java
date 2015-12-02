@@ -30,10 +30,11 @@ public class Game {
         turn = new Turn();
         messages = ReplaySubject.create();
         fieldStream = messages.ofType(CoordinateMessage.class)
-            .filter(cm -> players.get(cm.getSessionId()).hasSignedup())
-            .filter(cm -> turn.hasTurn(players.get(cm.getSessionId())))
-            .map(cm -> new Field(cm.getX(), cm.getY(), players.get(cm.getSessionId())))
-            .distinct();
+                .filter(cm -> players.get(cm.getSessionId()).hasSignedup())
+                .filter(cm -> turn.hasTurn(players.get(cm.getSessionId())))
+                .map(cm -> new Field(cm.getX(), cm.getY(), players.get(cm.getSessionId())))
+                .distinct()
+                .share();
 
         fieldStream.subscribe(board);
         fieldStream.subscribe(turn);
