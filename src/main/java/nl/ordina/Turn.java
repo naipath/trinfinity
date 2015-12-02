@@ -2,12 +2,14 @@ package nl.ordina;
 
 import java.util.Queue;
 import java.util.concurrent.LinkedTransferQueue;
+import nl.ordina.message.NewTurnMessage;
+import rx.Observer;
 
 /**
  *
  * @author Eric Jan Malotaux
  */
-public class Turn {
+public class Turn implements Observer<Field> {
 
     private final Queue<Player> players = new LinkedTransferQueue<>();
 
@@ -23,5 +25,27 @@ public class Turn {
         Player next = players.remove();
         players.add(next);
         return next;
+    }
+
+    public boolean hasTurn(Player player) {
+        return players.peek().equals(player);
+    }
+
+    @Override
+    public void onCompleted() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void onError(Throwable e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void onNext(Field t) {
+        Player next = next();
+        for (Player player : players) {
+            player.sendMessage(new NewTurnMessage(next.getName()));
+        }
     }
 }

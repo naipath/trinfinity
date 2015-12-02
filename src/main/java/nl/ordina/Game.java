@@ -14,8 +14,8 @@ import javax.websocket.Session;
 public class Game {
 
     private Board board;
+    private Turn turn;
     private final PlayerRepository players = new PlayerRepository();
-
 
     private ReplaySubject<Message> messages;
     private Observable<Field> fieldStream;
@@ -27,13 +27,16 @@ public class Game {
 
     private void initialize() {
         board = new Board();
+        turn = new Turn();
         messages = ReplaySubject.create();
         fieldStream = messages.ofType(CoordinateMessage.class)
             .filter(cm -> players.get(cm.getSessionId()).hasSignedup())
+            .filter(cm -> turn.hasTurn(players.get(cm.getSessionId())))
             .map(cm -> new Field(cm.getX(), cm.getY(), players.get(cm.getSessionId())))
             .distinct();
 
         fieldStream.subscribe(board);
+        fieldStream.subscribe(turn);
 
         gameEndingObservable = fieldStream
             .filter(board::isWinningConditionMet)
@@ -41,27 +44,31 @@ public class Game {
             .map(field -> new GameEndingMessage(field.player.getName()));
 
         messages.ofType(SignupMessage.class).subscribe(
-                message -> {
-                    players.get(message.getSessionId()).signup(message.getName());
-                    players.getAllPlayers()
-                            .subscribe(player1 -> player1.sendMessage(new ExpandMessage(players.boardSize())));
-                });
+            message -> {
+                players.get(message.getSessionId()).signup(message.getName());
+                players.getAllPlayers()
+                .subscribe(player1 -> player1.sendMessage(new ExpandMessage(players.boardSize())));
+            });
 
         for (Player player : players.getAllPlayers().toList().toBlocking().first()) {
             fieldStream.subscribe(player);
             gameEndingObservable.subscribe(player::sendMessage);
+            turn.add(player);
         }
     }
 
     public void addPlayer(Session session) {
         final Player player = new Player(session);
         players.add(player);
+        turn.add(player);;
         fieldStream.subscribe(player);
         gameEndingObservable.subscribe(player::sendMessage);
     }
 
     public void removePlayer(Session session) {
-        players.remove(session.getId());
+        final String id = session.getId();
+        players.remove(id);
+        turn.add(players.get(id));
         resetGame();
     }
 
