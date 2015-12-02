@@ -8,14 +8,18 @@ import nl.ordina.services.PlayerRepository;
 import rx.Observable;
 import rx.subjects.ReplaySubject;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Singleton;
 import javax.websocket.Session;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
+@ApplicationScoped
 public class Game {
 
     private Board board;
     private final PlayerRepository players = new PlayerRepository();
+
 
     private ReplaySubject<Message> messages;
     private Observable<Field> fieldStream;
@@ -74,4 +78,5 @@ public class Game {
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(board).append(players).toString();
     }
+
 }

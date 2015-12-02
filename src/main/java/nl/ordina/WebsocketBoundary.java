@@ -13,14 +13,17 @@ import javax.inject.Singleton;
 @ServerEndpoint(value = "/actions",
     decoders = {MessageDecoder.class},
     encoders = {MessageEncoder.class})
-@Singleton
 public class WebsocketBoundary {
 
-    private Game game = new Game();
+    @Inject
+    private Game game ;
 
     @OnOpen
     public void onOpen(Session session) {
         game.addPlayer(session);
+        System.out.println("onOpen:" + this);
+        System.out.println(game);
+
     }
 
     @OnMessage
