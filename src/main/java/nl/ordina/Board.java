@@ -13,10 +13,6 @@ public class Board implements Observer<Field> {
 
     private final Set<Field> fields = new HashSet<>();
 
-    public void put(Field field) {
-        fields.add(field);
-    }
-
     private List<Field> getCoordinatesFromPlayer(String sessionId) {
         return fields.stream().filter(field -> field.matchesSessionId(sessionId)).collect(Collectors.toList());
     }
