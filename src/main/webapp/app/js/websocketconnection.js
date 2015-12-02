@@ -1,5 +1,4 @@
 var ws = new WebSocket('ws://localhost:8080/trinfinity/actions');
-//var ws = new WebSocket('ws://192.168.1.199:8080/trinfinity/actions');
 
 var someObservable = Rx.Observable.fromEvent(ws, 'message')
     .map(function (evt) {
@@ -53,8 +52,10 @@ resetGame.subscribe(function (data) {
 });
 
 expandGame.subscribe(function (data) {
-    addColumnAfter();
-    addRow();
+    while($('tr').length <= data.size) {
+        addColumnAfter();
+        addRow();
+    }
 });
 
 var resetTiles = function () {
@@ -69,10 +70,5 @@ function addRow() {
 function addColumnAfter() {
     $('table').find('tr').each(function(){
         $(this).find('td:last').eq(0).after('<td></td>');
-    });
-}
-function addColumnBefore() {
-    $('table').find('tr').each(function(){
-        $(this).find('td:first').eq(0).before('<td></td>');
     });
 }

@@ -56,7 +56,7 @@ public class Game {
         gameEndingObservable.subscribe(player::sendMessage);
 
         players.getAllPlayers()
-                 .subscribe(player1 -> player1.sendMessage(new ExpandMessage()));
+                 .subscribe(player1 -> player1.sendMessage(new ExpandMessage(players.boardSize())));
     }
 
     public void removePlayer(Session session) {

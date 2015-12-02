@@ -25,6 +25,13 @@ public class PlayerRepository {
         players.remove(id);
     }
 
+    public int boardSize() {
+        if (players.size() < 3) {
+            return 3;
+        }
+        return players.size() + 1;
+    }
+
     public Observable<Player> getAllPlayers() {
         return Observable.create(subscriber -> {
             players.values().stream().forEach(subscriber::onNext);
