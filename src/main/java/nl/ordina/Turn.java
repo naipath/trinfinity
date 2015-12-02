@@ -20,11 +20,15 @@ public class Turn implements Observer<Field> {
     public Player next() {
         Player next = players.remove();
         players.add(next);
-        return next;
+        return playerOnTurn();
+    }
+
+    public Player playerOnTurn() {
+        return players.peek();
     }
 
     public boolean hasTurn(Player player) {
-        return players.peek().equals(player);
+        return playerOnTurn().equals(player);
     }
 
     @Override

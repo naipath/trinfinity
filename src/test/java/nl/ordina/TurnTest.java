@@ -35,7 +35,7 @@ public class TurnTest {
 
     @Test
     public void testNext() {
-        assertThat(turn.next().getSessionId(), is("1"));
+        assertThat(turn.playerOnTurn().getSessionId(), is("1"));
         assertThat(turn.next().getSessionId(), is("2"));
         assertThat(turn.next().getSessionId(), is("3"));
         assertThat(turn.next().getSessionId(), is("1"));
@@ -43,12 +43,12 @@ public class TurnTest {
         turn.add(new Player(new MySession("4")));
         assertThat(turn.next().getSessionId(), is("3"));
         assertThat(turn.next().getSessionId(), is("1"));
-        assertThat(turn.next().getSessionId(), is("2"));
         assertThat(turn.next().getSessionId(), is("4"));
+        assertThat(turn.next().getSessionId(), is("2"));
         assertThat(turn.next().getSessionId(), is("3"));
         assertThat(turn.next().getSessionId(), is("1"));
-        assertThat(turn.next().getSessionId(), is("2"));
         assertThat(turn.next().getSessionId(), is("4"));
+        assertThat(turn.next().getSessionId(), is("2"));
         assertThat(turn.next().getSessionId(), is("3"));
     }
 
