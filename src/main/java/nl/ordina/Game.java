@@ -42,7 +42,7 @@ public class Game {
         gameEndingObservable = fieldStream
             .filter(board::isWinningConditionMet)
             .doOnNext(f -> resetGame())
-            .map(field -> new GameEndingMessage(field.player.getName()));
+            .map(field -> new GameEndingMessage(field.player.getName())).share();
 
         messages.ofType(SignupMessage.class).subscribe(
             message -> {
