@@ -21,8 +21,6 @@ public class WebsocketBoundary {
     @OnOpen
     public void onOpen(Session session) {
         game.addPlayer(session);
-        System.out.println("onOpen:" + this);
-        System.out.println(game);
 
     }
 
