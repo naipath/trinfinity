@@ -10,6 +10,10 @@ var handleCoordinate = someObservable.filter(function (data) {
     return data.type === 'COORDINATE';
 });
 
+var newTurn = someObservable.filter(function (data) {
+    return data.type === 'NEWTURN';
+});
+
 var gameEnding = someObservable.filter(function (data) {
     return data.type === 'ENDING';
 });
@@ -25,6 +29,14 @@ gameEnding.subscribe(function (data) {
         alert('Game has ended, human ' + data.name + ' has won.');
     }
     resetTiles();
+});
+
+newTurn.subscribe(function (data) {
+    if (data.name === name) {
+        alert('Your Turn!');
+    } else {
+        alert( data.name + '\'s turn.');
+    }
 });
 
 handleCoordinate.subscribe(function (data) {
