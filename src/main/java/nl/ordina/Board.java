@@ -2,16 +2,16 @@ package nl.ordina;
 
 import rx.Observer;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
 public class Board implements Observer<Field> {
 
-    private final Set<Field> fields = new TreeSet<>();
+    private final Set<Field> fields = new HashSet<>();
 
     public void put(Field field) {
         fields.add(field);
@@ -23,7 +23,6 @@ public class Board implements Observer<Field> {
 
     public boolean isWinningConditionMet(Field field) {
         List<Field> playerFields = getCoordinatesFromPlayer(field.getSessionId());
-
         return playerFields.stream()
             .filter(field::nextTo)
             .filter(coordinate2 -> hasLineOfThree(field, coordinate2, playerFields)).count() > 0;

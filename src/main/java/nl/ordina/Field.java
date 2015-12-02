@@ -4,7 +4,7 @@ import nl.ordina.message.CoordinateMessage;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
-public class Field implements Comparable<Field> {
+public class Field {
 
     public final int relativeX;
     public final int relativeY;
@@ -65,8 +65,4 @@ public class Field implements Comparable<Field> {
         return String.format("[%d/%d]", relativeX, relativeY);
     }
 
-    @Override
-    public int compareTo(Field that) {
-        return (this.relativeX - that.relativeX) + (this.relativeY - that.relativeY);
-    }
 }
