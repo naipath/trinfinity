@@ -36,9 +36,9 @@ gameEnding.subscribe(function (data) {
 
 newTurn.subscribe(function (data) {
     if (data.name === name) {
-        $('#turn').innerHTML('Your Turn!');
+        $('#turn').html('Your Turn!');
     } else {
-        $('#turn').innerHTML( data.name);
+        $('#turn').html(data.name);
     }
 });
 

@@ -5,10 +5,6 @@ import java.util.concurrent.LinkedTransferQueue;
 import nl.ordina.message.NewTurnMessage;
 import rx.Observer;
 
-/**
- *
- * @author Eric Jan Malotaux
- */
 public class Turn implements Observer<Field> {
 
     private final Queue<Player> players = new LinkedTransferQueue<>();
