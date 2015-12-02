@@ -1,4 +1,5 @@
 var ws = new WebSocket('ws://localhost:8080/trinfinity/actions');
+//var ws = new WebSocket('ws://192.168.1.199:8080/trinfinity/actions');
 
 var someObservable = Rx.Observable.fromEvent(ws, 'message')
     .map(function (evt) {
@@ -36,9 +37,9 @@ gameEnding.subscribe(function (data) {
 
 newTurn.subscribe(function (data) {
     if (data.name === name) {
-        $('#turn').html('Your Turn!');
+        $('#turn').text('Your Turn!');
     } else {
-        $('#turn').html(data.name);
+        $('#turn').text(data.name);
     }
 });
 

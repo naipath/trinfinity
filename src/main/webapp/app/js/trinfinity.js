@@ -21,3 +21,7 @@ Rx.Observable.fromEvent($('button'), 'click')
         $('.panel').remove();
         $('#overlay').remove();
     });
+
+$('#draggable').draggable({
+    handle: "ul"
+});

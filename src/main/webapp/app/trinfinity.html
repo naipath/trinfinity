@@ -37,6 +37,7 @@
         width: 100%;
         background: rgba(0, 0, 0, 0.1);
         position: absolute;
+        top:0;
     }
 
     #turn {
@@ -50,13 +51,13 @@
     }
 </style>
 <body>
+<div id="overlay"></div>
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <h1 id="turn" class="navbar-brand col-md-12">Game needs to start...</h1>
     </div>
 </nav>
 
-<div id="overlay"></div>
 
 <div class="col-md-2 col-md-offset-5" style="margin-top:60px; position: absolute">
     <div class="panel panel-success">
@@ -73,6 +74,28 @@
             </fieldset>
         </div>
     </div>
+</div>
+
+<div id="draggable" class="ui-widget-content">
+    <ul class="list-group col-md-offset-9 col-md-2" style="margin-top: 20px; position: absolute;">
+        <li class="list-group-item active">Players</li>
+        <li class="list-group-item">
+            <span class="badge" style="background: red;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <b>Gerlo</b>
+        </li>
+        <li class="list-group-item">
+            <span class="badge" style="background: brown;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            Eric Jan</li>
+        <li class="list-group-item">
+            <span class="badge" style="background: green;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            Teije</li>
+        <li class="list-group-item">
+            <span class="badge" style="background: yellow;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            Dirk</li>
+        <li class="list-group-item">
+            <span class="badge" style="background: blue;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            Ishan</li>
+    </ul>
 </div>
 
 <table>
@@ -103,6 +126,8 @@
 </table>
 
 <script src="node_modules/jquery/dist/jquery.min.js"></script>
+<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+
 <script src="node_modules/rx/dist/rx.all.js"></script>
 <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="js/trinfinity.js"></script>
