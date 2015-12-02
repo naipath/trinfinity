@@ -46,8 +46,8 @@ public class Game {
         messages.ofType(SignupMessage.class).subscribe(
             message -> {
                 players.get(message.getSessionId()).signup(message.getName());
-                players.getAllPlayers()
-                .subscribe(player1 -> player1.sendMessage(new ExpandMessage(players.boardSize())));
+                players.getAllSignupPlayers()
+                        .subscribe(player1 -> player1.sendMessage(new ExpandMessage(players.boardSize())));
             });
 
         for (Player player : players.getAllPlayers().toList().toBlocking().first()) {

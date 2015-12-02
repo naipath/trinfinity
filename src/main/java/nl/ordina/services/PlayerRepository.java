@@ -39,6 +39,10 @@ public class PlayerRepository {
         });
     }
 
+    public Observable<Player> getAllSignupPlayers () {
+        return getAllPlayers().filter(Player::hasSignedup);
+    }
+
     public void sendReset() {
         this.getAllPlayers().subscribe(player -> player.sendMessage(new ResetMessage()));
     }
